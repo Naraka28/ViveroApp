@@ -1,0 +1,25 @@
+﻿@using ViveroApp.Models;
+
+@model IEnumerable<Plantas>
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var planta in Model)
+        {
+            <tr>
+                <td>
+                    @planta.Nombre
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
