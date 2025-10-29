@@ -1,25 +1,40 @@
-﻿using Dapper;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
+using System.Data;
+using ViveroApp.Servicios;
 using ViveroApp.Models;
+using Dapper;
 
 namespace ViveroApp.Controllers
 {
     public class PlantasController : Controller
     {
-        private readonly string connectionString;
+        private readonly IRepositorioPlantas repositorioPlantas;
+        private string _connectionString;
 
-        public PlantasController(IConfiguration configuration)
+        public PlantasController(IRepositorioPlantas repositorioPlantas)
         {
-            connectionString = configuration.GetConnectionString("DefaultConnection");
+            this.repositorioPlantas = repositorioPlantas;
         }
+
         public async Task<IActionResult> Index()
         {
-            using (var connection = new SqlConnection(connectionString))
-            {
-                var plantas = await connection.QueryAsync<Plantas>("SELECT * FROM planta");
-                return View(plantas);
-            }
+            var plantas = await repositorioPlantas.ObtenerTodasLasPlantas(); 
+            return View(plantas);
         }
+
+        public async Task<IActionResult> DetallePlanta(int id)
+        {
+            var planta = await repositorioPlantas.ObtenerDetalle(id);
+            return View(planta);
+        }
+        public async Task<IActionResult> PlantasPopulares()
+        {
+            var plantas = await repositorioPlantas.ObtenerPlantasPopulares();
+            return View(plantas);
+        }
+
+
+
     }
 }

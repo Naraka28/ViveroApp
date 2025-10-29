@@ -1,0 +1,29 @@
+﻿@using ViveroApp.Dto;
+@model IEnumerable<PlantaPopularDto>
+@{
+    ViewData["Title"] = "Populares";
+}
+
+<div class="container my-4">
+    <h2 class="mb-4">Plantas Populares</h2>
+
+    <div class="row">
+        @foreach (var planta in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <img src="@planta.ImagenUrl" class="card-img-top" alt="@planta.Nombre" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">@planta.Nombre</h5>
+                        <p class="text-muted small">@planta.NombreCientifico</p>
+
+                        <p class="mb-1"><strong>Dificultad:</strong> @planta.Dificultad</p>
+                        <p class="mb-1"><strong>Riego:</strong> @planta.TipoRiego</p>
+                        <p class="mb-1"><strong>Luz:</strong> @planta.TipoLuz</p>
+                        <p class="mb-0"><strong>@planta.UsuariosQueLaTienen</strong> usuarios</p>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

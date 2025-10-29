@@ -1,0 +1,32 @@
+﻿@model ViveroApp.Models.Plantas
+
+@{
+    
+    
+    
+}
+
+<h2>@Model.Nombre (@Model.NombreCientifico)</h2>
+
+@if (!string.IsNullOrEmpty(Model.ImagenUrl))
+{
+    <img src="@Model.ImagenUrl" alt="@Model.Nombre" style="max-width:250px; border-radius:10px;" />
+}
+
+<p><strong>Descripción:</strong> @Model.Descripcion</p>
+<p><strong>Dificultad:</strong> @Model.Dificultad</p>
+<p><strong>Tóxica:</strong> @(Model.Toxica ? "Sí" : "No")</p>
+<p><strong>Cuidados especiales:</strong> @Model.CuidadosEspeciales</p>
+<p><strong>Altura máxima:</strong> @(Model.AlturaMaxCm ) cm</p>
+
+@if (Model.PlantaCategorias != null && Model.PlantaCategorias.Any())
+{
+    <hr />
+    <h4>Categorías</h4>
+    <ul>
+        @foreach (var pc in Model.PlantaCategorias)
+        {
+            <li><i class="@pc.Categoria.Icono"></i> @pc.Categoria.Nombre</li>
+        }
+    </ul>
+}
