@@ -27,11 +27,54 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Plantas" asp-action="Index">Plantas</a>
+                            <a class="nav-link" asp-controller="Plantas" asp-action="Index">Plantas</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Plantas" asp-action="PlantasPopulares">Plantas Populares</a>
+                            <a class="nav-link" asp-controller="Plantas" asp-action="PlantasPopulares">Populares</a>
                         </li>
+                        @if (User.Identity?.IsAuthenticated == true)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="MiJardin" asp-action="Index">Mi Jardín</a>
+                            </li>
+                        }
+                    </ul>
+                    <ul class="navbar-nav">
+                        @if (User.Identity?.IsAuthenticated == true)
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" data-bs-toggle="dropdown">
+                                    👤 @User.Identity.Name
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="Account" asp-action="Profile">
+                                            Mi Perfil
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="Auth" asp-action="ChangePassword">
+                                            Cambiar Contraseña
+                                        </a>
+                                    </li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <form asp-controller="Auth" asp-action="Logout" method="post" class="d-inline">
+                                            <button type="submit" class="dropdown-item">Cerrar Sesión</button>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Auth" asp-action="Login">Iniciar Sesión</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Auth" asp-action="Registrar">Registrarse</a>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>

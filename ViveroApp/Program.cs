@@ -1,10 +1,25 @@
-﻿using ViveroApp.Servicios;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
+using ViveroApp.Servicios;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddHttpContextAccessor();
+
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Auth/Login";
+        options.LogoutPath = "/Auth/Logout";
+        options.AccessDeniedPath = "/Auth/AccessDenied";
+        options.ExpireTimeSpan = TimeSpan.FromHours(2);
+        options.SlidingExpiration = true;
+    });
+
 builder.Services.AddTransient<IRepositorioPlantas, RepositorioPlantas>();
+builder.Services.AddScoped<IRepositorioUsuarios, RepositorioUsuarios>();
+builder.Services.AddScoped<IRepositorioAutenticar, RepositorioAutenticar>();
 
 var app = builder.Build();
 
@@ -21,7 +36,9 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-app.UseAuthorization();
+app.UseAuthentication();  // ← Primero
+app.UseAuthorization();   // ← Después
+
 
 app.MapControllerRoute(
     name: "default",
