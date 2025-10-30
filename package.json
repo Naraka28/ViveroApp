@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "@tailwindcss/cli": "^4.1.16",
+    "tailwindcss": "^4.1.16"
+  },
+  "scripts": {
+    "tailwind": "npx tailwindcss -i ViveroApp/wwwroot/css/site.css -o ViveroApp/wwwroot/css/styles.css --watch"
+}
+}

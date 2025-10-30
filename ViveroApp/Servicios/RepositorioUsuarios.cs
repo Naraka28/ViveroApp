@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using Microsoft.Data.SqlClient;
 using System;
+using System.Data;
 using ViveroApp.Models;
 
 public interface IRepositorioUsuarios
@@ -9,7 +10,7 @@ public interface IRepositorioUsuarios
     Task<Usuario?> ObtenerPorEmail(string email);
     Task<(bool Success, int? UsuarioId)> Crear(Usuario usuario);
     Task ActualizarUltimoAcceso(int usuarioId);
-    Task ActualizarPassword(int usuarioId, string passwordHash);
+    Task ActualizarPassword(int usuarioId, string password);
 }
 public class RepositorioUsuarios : IRepositorioUsuarios
 {
@@ -48,8 +49,8 @@ public class RepositorioUsuarios : IRepositorioUsuarios
         using var connection = new SqlConnection(connectionString);
 
         var id = await connection.ExecuteScalarAsync<int>(
-            @"INSERT INTO usuario (nombre, email, password_hash, fecha_registro, activo, created_at, updated_at)
-                  VALUES (@Nombre, @Email, @PasswordHash, @FechaRegistro, @Activo, @CreatedAt, @UpdatedAt);
+            @"INSERT INTO usuario (nombre, email, password, fecha_registro, activo, created_at, updated_at)
+                  VALUES (@Nombre, @Email, @Password, @FechaRegistro, @Activo, @CreatedAt, @UpdatedAt);
                   SELECT CAST(SCOPE_IDENTITY() as int);",
             usuario
         );
@@ -60,14 +61,15 @@ public class RepositorioUsuarios : IRepositorioUsuarios
     public async Task ActualizarUltimoAcceso(int usuarioId)
     {
         using var connection = new SqlConnection(connectionString);
-
+        
         await connection.ExecuteAsync(
-            "UPDATE usuario SET ultimo_acceso = @UltimoAcceso WHERE id = @Id",
-            new { Id = usuarioId, UltimoAcceso = DateTime.Now }
+            "sp_actualizar_ultimo_acceso",
+            new { usuario_id = usuarioId },
+            commandType: CommandType.StoredProcedure
         );
     }
 
-    public Task ActualizarPassword(int usuarioId, string passwordHash)
+    public Task ActualizarPassword(int usuarioId, string password)
     {
         throw new NotImplementedException();
     }

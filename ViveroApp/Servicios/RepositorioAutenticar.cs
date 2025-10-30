@@ -31,7 +31,6 @@ namespace ViveroApp.Servicios
             string password,
             bool rememberMe)
         {
-            // Obtener usuario por email
             var usuario = await repositorioUsuario.ObtenerPorEmail(email);
 
             if (usuario == null)
@@ -40,15 +39,13 @@ namespace ViveroApp.Servicios
             if (!usuario.Activo)
                 return (false, "Tu cuenta está desactivada. Contacta al administrador.", null);
 
-            bool passwordValida = BCrypt.Net.BCrypt.Verify(password, usuario.PasswordHash);
+            bool passwordValida = BCrypt.Net.BCrypt.Verify(password, usuario.Password);
 
             if (!passwordValida)
                 return (false, "Email o contraseña incorrectos", null);
 
-            // Actualizar último acceso
             await repositorioUsuario.ActualizarUltimoAcceso(usuario.Id);
 
-            // Crear claims
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, usuario.Id.ToString()),
@@ -78,21 +75,18 @@ namespace ViveroApp.Servicios
         }
         public async Task<(bool Success, string Message, int? UsuarioId)> Registrar(RegistroDto dto)
         {
-            // Verificar si el email ya existe
             var usuarioExistente = await repositorioUsuario.ObtenerPorEmail(dto.Email);
 
             if (usuarioExistente != null)
                 return (false, "El email ya está registrado", null);
 
-            // Hash de la contraseña
             string passwordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password);
 
-            // Crear usuario
             var resultado = await repositorioUsuario.Crear(new Usuario
             {
                 Nombre = dto.Nombre,
                 Email = dto.Email,
-                PasswordHash = passwordHash,
+                Password = passwordHash,
                 FechaRegistro = DateTime.Now,
                 Activo = true,
                 CreatedAt = DateTime.Now,
