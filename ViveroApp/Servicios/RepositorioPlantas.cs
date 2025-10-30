@@ -59,9 +59,6 @@ namespace ViveroApp.Servicios
             return planta;
         }
 
-
-
-
         public async Task<IEnumerable<PlantaPopularDto>> ObtenerPlantasPopulares(int top = 10)
         {
             using var connection = new SqlConnection(connectionString);

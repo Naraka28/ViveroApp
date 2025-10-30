@@ -40,7 +40,6 @@ namespace ViveroApp.Servicios
             if (!usuario.Activo)
                 return (false, "Tu cuenta está desactivada. Contacta al administrador.", null);
 
-            // Verificar contraseña
             bool passwordValida = BCrypt.Net.BCrypt.Verify(password, usuario.PasswordHash);
 
             if (!passwordValida)
