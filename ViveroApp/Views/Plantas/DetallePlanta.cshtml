@@ -2,30 +2,26 @@
 @{
     ViewData["Title"] = Model.Nombre;
 }
-
-<div class="container mt-4 mb-5">
-    <h1 class="text-primary">@Model.Nombre</h1>
+<div class="container mx-auto mt-4 mb-5 px-4">
+    <h1 class="text-blue-600 text-3xl font-bold">@Model.Nombre</h1>
     @if (!string.IsNullOrEmpty(Model.Nombre_Cientifico))
     {
-        <p class="text-muted fst-italic">@Model.Nombre_Cientifico</p>
+        <p class="text-gray-500 italic">@Model.Nombre_Cientifico</p>
     }
-
-    <div class="row mt-4">
-        <div class="col-md-4">
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-4 mt-4">
+        <div class="md:col-span-4">
             @if (!string.IsNullOrEmpty(Model.Imagen_Url))
             {
-                <img src="@Model.Imagen_Url" alt="@Model.Nombre" class="img-fluid rounded" />
+                <img src="@Model.Imagen_Url" alt="@Model.Nombre" class="w-full rounded" />
             }
             else
             {
-                <p class="text-muted">Sin imagen disponible</p>
+                <p class="text-gray-500">Sin imagen disponible</p>
             }
         </div>
-
-        <div class="col-md-8">
+        <div class="md:col-span-8">
             <p>@Model.Descripcion</p>
-
-            <ul class="list-unstyled">
+            <ul class="list-none pl-0">
                 <li><strong>Dificultad:</strong> @Model.Dificultad</li>
                 <li><strong>Tóxica:</strong> @(Model.Toxica ? "Sí" : "No")</li>
                 @if (Model.AlturaMaxCm.HasValue)
@@ -33,24 +29,20 @@
                     <li><strong>Altura máxima:</strong> @Model.AlturaMaxCm cm</li>
                 }
             </ul>
-
             @if (!string.IsNullOrEmpty(Model.CuidadosEspeciales))
             {
                 <p><strong>Cuidados especiales:</strong> @Model.CuidadosEspeciales</p>
             }
-
             @if (!string.IsNullOrEmpty(Model.Notas))
             {
                 <p><strong>Notas:</strong> @Model.Notas</p>
             }
         </div>
     </div>
-
-    <hr class="my-4" />
-
-    <h3>Riego - @Model.RiegoNombre</h3>
+    <hr class="my-4 border-gray-300" />
+    <h3 class="text-xl font-bold">Riego - @Model.RiegoNombre</h3>
     <p>@Model.RiegoDescripcion</p>
-    <ul class="list-unstyled">
+    <ul class="list-none pl-0">
         <li><strong>Verano:</strong> Cada @Model.FrecuenciaDiasVerano días</li>
         <li><strong>Invierno:</strong> Cada @Model.FrecuenciaDiasInvierno días</li>
         <li><strong>Nivel:</strong> @Model.RiegoNivel</li>
@@ -59,45 +51,46 @@
     {
         <p><strong>Recomendaciones:</strong> @Model.RiegoRecomendaciones</p>
     }
-
-    <hr class="my-4" />
-
-    <h3>Luz - @Model.LuzTipo</h3>
+    <hr class="my-4 border-gray-300" />
+    <h3 class="text-xl font-bold">Luz - @Model.LuzTipo</h3>
     <p>@Model.LuzDescripcion</p>
-    <ul class="list-unstyled">
+    <ul class="list-none pl-0">
         <li><strong>Horas de luz:</strong> @Model.HorasMin - @Model.HorasMax horas</li>
         <li><strong>Ubicación:</strong> @Model.UbicacionRecomendada</li>
     </ul>
-
-    <hr class="my-4" />
-
-    <h3>Sustrato - @Model.SustratoTipo</h3>
+    <hr class="my-4 border-gray-300" />
+    <h3 class="text-xl font-bold">Sustrato - @Model.SustratoTipo</h3>
     <p>@Model.SustratoDescripcion</p>
-    <ul class="list-unstyled">
+    <ul class="list-none pl-0">
         <li><strong>pH:</strong> @Model.PhRango</li>
         <li><strong>Drenaje:</strong> @Model.Drenaje</li>
         <li><strong>Composición:</strong> @Model.Composicion</li>
     </ul>
-
     @if (Model.Categorias != null && Model.Categorias.Any())
     {
-        <hr class="my-4" />
-        <h3>Categorías</h3>
-        <ul class="list-inline">
+        <hr class="my-4 border-gray-300" />
+        <h3 class="text-xl font-bold">Categorías</h3>
+        <ul class="flex flex-wrap gap-2">
             @foreach (var categoria in Model.Categorias)
             {
-                <li class="list-inline-item border rounded px-2 py-1">
+                <li class="inline-block border border-gray-300 rounded px-2 py-1">
                     @if (!string.IsNullOrEmpty(categoria.Icono))
                     {
-                        <i class="@categoria.Icono me-1"></i>
+                        <i class="@categoria.Icono mr-1"></i>
                     }
                     @categoria.Nombre
                 </li>
             }
         </ul>
     }
-
     <div class="mt-4">
-        <a asp-action="Index" class="btn btn-outline-primary">Volver al listado</a>
+        @if (Context.Request.Headers["Referer"].ToString().Contains("MiJardin"))
+        {
+            <a asp-controller="MiJardin" asp-action="Index" class="inline-block px-4 py-2 border border-blue-600 text-blue-600 rounded hover:bg-blue-50">Volver a Mi Jardín</a>
+        }
+        else
+        {
+            <a asp-controller="Plantas" asp-action="Index" class="inline-block px-4 py-2 border border-blue-600 text-blue-600 rounded hover:bg-blue-50">Volver al listado</a>
+        }
     </div>
 </div>

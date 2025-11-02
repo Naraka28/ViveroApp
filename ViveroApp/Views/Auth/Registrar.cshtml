@@ -1,56 +1,47 @@
 ﻿@model ViveroApp.Dto.RegistroDto
-
 @{
     ViewData["Title"] = "Registro";
 }
-
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-8 col-lg-6">
-            <div class="card shadow">
-                <div class="card-body p-5">
+<div class="container mx-auto mt-5">
+    <div class="flex justify-center">
+        <div class="w-full md:w-2/3 lg:w-1/2">
+            <div class="bg-white rounded-lg shadow-lg">
+                <div class="p-12">
                     <div class="text-center mb-4">
-                        <h2>🌱 Crear Cuenta</h2>
-                        <p class="text-muted">Únete a nuestra comunidad de amantes de las plantas</p>
+                        <h2 class="text-2xl font-bold">🌱 Crear Cuenta</h2>
+                        <p class="text-gray-500">Únete a nuestra comunidad de amantes de las plantas</p>
                     </div>
-
                     <form asp-action="Registrar" method="post">
-                        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
-
+                        <div asp-validation-summary="ModelOnly" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-3"></div>
                         <div class="mb-3">
-                            <label asp-for="Nombre" class="form-label"></label>
-                            <input asp-for="Nombre" class="form-control" placeholder="Juan Pérez" />
-                            <span asp-validation-for="Nombre" class="text-danger"></span>
+                            <label asp-for="Nombre" class="block mb-2 font-medium"></label>
+                            <input asp-for="Nombre" class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Juan Pérez" />
+                            <span asp-validation-for="Nombre" class="text-red-600 text-sm"></span>
                         </div>
-
                         <div class="mb-3">
-                            <label asp-for="Email" class="form-label"></label>
-                            <input asp-for="Email" class="form-control" placeholder="correo@ejemplo.com" />
-                            <span asp-validation-for="Email" class="text-danger"></span>
+                            <label asp-for="Email" class="block mb-2 font-medium"></label>
+                            <input asp-for="Email" class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="correo@ejemplo.com" />
+                            <span asp-validation-for="Email" class="text-red-600 text-sm"></span>
                         </div>
-
                         <div class="mb-3">
-                            <label asp-for="Password" class="form-label"></label>
-                            <input asp-for="Password" class="form-control" placeholder="Mínimo 6 caracteres" />
-                            <span asp-validation-for="Password" class="text-danger"></span>
+                            <label asp-for="Password" class="block mb-2 font-medium"></label>
+                            <input asp-for="Password" class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Mínimo 6 caracteres" />
+                            <span asp-validation-for="Password" class="text-red-600 text-sm"></span>
                         </div>
-
                         <div class="mb-3">
-                            <label asp-for="ConfirmPassword" class="form-label"></label>
-                            <input asp-for="ConfirmPassword" class="form-control" placeholder="Repite tu contraseña" />
-                            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                            <label asp-for="ConfirmPassword" class="block mb-2 font-medium"></label>
+                            <input asp-for="ConfirmPassword" class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Repite tu contraseña" />
+                            <span asp-validation-for="ConfirmPassword" class="text-red-600 text-sm"></span>
                         </div>
-
-                        <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-success btn-lg">
+                        <div class="space-y-2">
+                            <button type="submit" class="w-full px-4 py-3 text-lg bg-green-600 text-white rounded hover:bg-green-700">
                                 Crear Cuenta
                             </button>
                         </div>
-
                         <div class="text-center mt-3">
                             <p class="mb-0">
                                 ¿Ya tienes cuenta?
-                                <a asp-action="Login" class="text-decoration-none">Inicia sesión</a>
+                                <a asp-action="Login" class="text-blue-600 hover:underline">Inicia sesión</a>
                             </p>
                         </div>
                     </form>
@@ -59,7 +50,6 @@
         </div>
     </div>
 </div>
-
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }

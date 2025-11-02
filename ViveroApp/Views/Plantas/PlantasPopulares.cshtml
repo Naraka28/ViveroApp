@@ -3,20 +3,17 @@
 @{
     ViewData["Title"] = "Populares";
 }
-
-<div class="container my-4">
-    <h2 class="mb-4">Plantas Populares</h2>
-
-    <div class="row">
+<div class="container mx-auto my-4 px-4">
+    <h2 class="mb-4 text-2xl font-bold">Plantas Populares</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         @foreach (var planta in Model)
         {
-            <div class="col-md-4 mb-4">
-                <div class="card">
-                    <img src="@planta.ImagenUrl" class="card-img-top" alt="@planta.Nombre" style="height: 200px; object-fit: cover;">
-                    <div class="card-body">
-                        <h5 class="card-title">@planta.Nombre</h5>
-                        <p class="text-muted small">@planta.NombreCientifico</p>
-
+            <div class="mb-4">
+                <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                    <img src="@planta.ImagenUrl" class="w-full h-48 object-cover" alt="@planta.Nombre">
+                    <div class="p-4">
+                        <h5 class="text-lg font-bold mb-2">@planta.Nombre</h5>
+                        <p class="text-gray-500 text-sm mb-2">@planta.NombreCientifico</p>
                         <p class="mb-1"><strong>Dificultad:</strong> @planta.Dificultad</p>
                         <p class="mb-1"><strong>Riego:</strong> @planta.TipoRiego</p>
                         <p class="mb-1"><strong>Luz:</strong> @planta.TipoLuz</p>

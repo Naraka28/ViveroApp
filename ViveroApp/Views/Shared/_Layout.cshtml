@@ -1,110 +1,125 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - ViveroApp</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/ViveroApp.styles.css" asp-append-version="true" />
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+
+    <!-- jQuery UI CSS -->
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.min.css">
+
+    <!-- Custom CSS -->
     <link rel="stylesheet" href="~/css/custom.css" asp-append-version="true" />
-
-
 </head>
-<body>
+<body class="flex flex-col min-h-screen">
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">ViveroApp</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Plantas" asp-action="Index">Plantas</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Plantas" asp-action="PlantasPopulares">Populares</a>
-                        </li>
-                        @if (User.Identity?.IsAuthenticated == true)
-                        {
+        <nav class="bg-white border-b border-gray-200 shadow-sm mb-3">
+            <div class="container mx-auto px-4">
+                <div class="flex items-center justify-between py-3">
+                    <a class="text-xl font-semibold" asp-area="" asp-controller="Home" asp-action="Index">ViveroApp</a>
+                    <button class="md:hidden" type="button" id="navbar-toggler">
+                        <span class="block w-6 h-0.5 bg-gray-600 mb-1"></span>
+                        <span class="block w-6 h-0.5 bg-gray-600 mb-1"></span>
+                        <span class="block w-6 h-0.5 bg-gray-600"></span>
+                    </button>
+                    <div class="hidden md:flex items-center justify-between flex-1 ml-8" id="navbar-collapse">
+                        <ul class="flex flex-col md:flex-row gap-0 md:gap-1 flex-1">
                             <li class="nav-item">
-                                <a class="nav-link" asp-controller="MiJardin" asp-action="Index">Mi Jardín</a>
-                            </li>
-                        }
-                    </ul>
-                    <ul class="navbar-nav">
-                        @if (User.Identity?.IsAuthenticated == true)
-                        {
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" data-bs-toggle="dropdown">
-                                    👤 @User.Identity.Name
-                                </a>
-                                <ul class="dropdown-menu dropdown-menu-end">
-                                    <li>
-                                        <a class="dropdown-item" asp-controller="Account" asp-action="Profile">
-                                            Mi Perfil
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" asp-controller="Auth" asp-action="ChangePassword">
-                                            Cambiar Contraseña
-                                        </a>
-                                    </li>
-                                    <li><hr class="dropdown-divider"></li>
-                                    <li>
-                                        <form asp-controller="Auth" asp-action="Logout" method="post" class="d-inline">
-                                            <button type="submit" class="dropdown-item">Cerrar Sesión</button>
-                                        </form>
-                                    </li>
-                                </ul>
-                            </li>
-                        }
-                        else
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link" asp-controller="Auth" asp-action="Login">Iniciar Sesión</a>
+                                <a class="block px-3 py-2 text-gray-700 hover:text-gray-900" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" asp-controller="Auth" asp-action="Registrar">Registrarse</a>
+                                <a class="block px-3 py-2 text-gray-700 hover:text-gray-900" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                             </li>
-                        }
-                    </ul>
+                            <li class="nav-item">
+                                <a class="block px-3 py-2 text-gray-700 hover:text-gray-900" asp-controller="Plantas" asp-action="Index">Plantas</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="block px-3 py-2 text-gray-700 hover:text-gray-900" asp-controller="Plantas" asp-action="PlantasPopulares">Populares</a>
+                            </li>
+                            @if (User.Identity?.IsAuthenticated == true)
+                            {
+                                <li class="nav-item">
+                                    <a class="block px-3 py-2 text-gray-700 hover:text-gray-900" asp-controller="MiJardin" asp-action="Index">Mi Jardín</a>
+                                </li>
+                            }
+                        </ul>
+                        <ul class="flex flex-col md:flex-row gap-0 md:gap-1">
+                            @if (User.Identity?.IsAuthenticated == true)
+                            {
+                                <li class="relative group">
+                                    <a class="block px-3 py-2 text-gray-700 hover:text-gray-900 cursor-pointer" id="userDropdown">
+                                        👤 @User.Identity.Name
+                                    </a>
+                                    <ul class="hidden group-hover:block absolute right-0 mt-0 bg-white border border-gray-200 rounded shadow-lg min-w-[160px] z-50">
+                                        <li>
+                                            <a class="block px-4 py-2 text-gray-700 hover:bg-gray-100" asp-controller="Account" asp-action="Profile">
+                                                Mi Perfil
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="block px-4 py-2 text-gray-700 hover:bg-gray-100" asp-controller="Auth" asp-action="ChangePassword">
+                                                Cambiar Contraseña
+                                            </a>
+                                        </li>
+                                        <li><hr class="border-gray-200 my-1"></li>
+                                        <li>
+                                            <form asp-controller="Auth" asp-action="Logout" method="post" class="inline w-full">
+                                                <button type="submit" class="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100">Cerrar Sesión</button>
+                                            </form>
+                                        </li>
+                                    </ul>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="nav-item">
+                                    <a class="block px-3 py-2 text-gray-700 hover:text-gray-900" asp-controller="Auth" asp-action="Login">Iniciar Sesión</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="block px-3 py-2 text-gray-700 hover:text-gray-900" asp-controller="Auth" asp-action="Registrar">Registrarse</a>
+                                </li>
+                            }
+                        </ul>
+                    </div>
                 </div>
             </div>
         </nav>
     </header>
-    <div class="container">
+    <div class="container mx-auto px-4">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2025 - ViveroApp - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    <footer class="border-t border-gray-200 mt-auto">
+        <div class="container mx-auto px-4 py-3 text-gray-600 text-center">
+            &copy; 2025 - ViveroApp - <a asp-area="" asp-controller="Home" asp-action="Privacy" class="hover:underline">Privacy</a>
         </div>
     </footer>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/lib/jquery-ui/jquery-ui.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <script>
+        // Toggle navbar en mobile
+        document.getElementById('navbar-toggler')?.addEventListener('click', function() {
+            document.getElementById('navbar-collapse').classList.toggle('hidden');
+        });
+    </script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
-
