@@ -1,0 +1,224 @@
+﻿@model IEnumerable<ViveroApp.DTOs.MiJardinDto>
+@{
+    ViewData["Title"] = "Mi Jardín";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-semibold">Mi Jardín</h2>
+        <a asp-controller="Plantas" asp-action="Index" class="btn btn-success">
+            <i class="bi bi-plus-circle"></i> Agregar Planta
+        </a>
+    </div>
+
+    @if (TempData["Mensaje"] != null)
+    {
+        <div class="alert alert-success">@TempData["Mensaje"]</div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">@TempData["Error"]</div>
+    }
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info text-center py-5">
+            <i class="bi bi-flower1" style="font-size: 3rem;"></i>
+            <h5 class="mt-3">Tu jardín está vacío</h5>
+            <p class="mb-3">Agrega tus primeras plantas desde el catálogo</p>
+            <a asp-controller="Plantas" asp-action="Index" class="btn btn-primary">Explorar Plantas</a>
+        </div>
+    }
+    else
+    {
+        <div class="row" id="listado-plantas">
+            @foreach (var planta in Model)
+            {
+                <div class="col-md-6 col-lg-4 mb-4" data-id="@planta.MiJardinId">
+                    <div class="card border-0 shadow-sm h-100">
+                        @if (!string.IsNullOrEmpty(planta.PlantaImagenUrl))
+                        {
+                            <img src="@planta.PlantaImagenUrl"
+                                 class="card-img-top"
+                                 alt="@planta.PlantaNombre"
+                                 style="height: 180px; object-fit: cover;">
+                        }
+                        else
+                        {
+                            <div class="bg-light d-flex align-items-center justify-content-center" style="height: 180px;">
+                                <i class="bi bi-flower1 text-muted" style="font-size: 2rem;"></i>
+                            </div>
+                        }
+
+                        <div class="card-body">
+                            <h5 class="card-title mb-1 fw-semibold">
+                                @if (!string.IsNullOrEmpty(planta.Apodo))
+                                {
+                                    @planta.Apodo <small class="text-muted">(@planta.PlantaNombre)</small>
+                                }
+                                else
+                                {
+                                    @planta.PlantaNombre
+                                }
+                            </h5>
+
+                            @if (!string.IsNullOrEmpty(planta.PlantaNombreCientifico))
+                            {
+                                <p class="text-muted fst-italic small">@planta.PlantaNombreCientifico</p>
+                            }
+
+                            <p class="small mb-1"><strong>Ubicación:</strong> @planta.Ubicacion</p>
+                            <p class="small mb-2"><strong>Agregada:</strong> @planta.Fecha_Agregada.ToString("dd/MM/yyyy")</p>
+
+                            @if (planta.UltimoRiego.HasValue)
+                            {
+                                <p class="small mb-2">
+                                    <strong>Último riego:</strong> @planta.UltimoRiego.Value.ToString("dd/MM/yyyy")
+                                    @if (planta.DiasDesdeUltimoRiego.HasValue)
+                                    {
+                                        <span class="badge @(planta.NecesitaRiego ? "bg-danger" : "bg-success")">
+                                            Hace @planta.DiasDesdeUltimoRiego días
+                                        </span>
+                                    }
+                                </p>
+                            }
+                            else
+                            {
+                                <p class="text-muted small mb-2">Aún no requiere riego</p>
+                            }
+
+                            @if (planta.NecesitaRiego)
+                            {
+                                <p class="text-danger small mb-2 fw-semibold">¡Necesita riego!</p>
+                            }
+
+                            @if (planta.UltimoFertilizado.HasValue)
+                            {
+                                <p class="small mb-2"><strong>Último fertilizado:</strong> @planta.UltimoFertilizado.Value.ToString("dd/MM/yyyy")</p>
+                            }
+
+                            <hr class="my-2" />
+
+                            <p class="small mb-1"><strong>Riego:</strong> @planta.RiegoNombre</p>
+
+                            @if (planta.Frecuencia_Dias_Verano.HasValue)
+                            {
+                                <p class="small mb-1">Verano: cada @planta.Frecuencia_Dias_Verano días</p>
+                            }
+
+                            @if (planta.Frecuencia_Dias_Invierno.HasValue)
+                            {
+                                <p class="small mb-1">Invierno: cada @planta.Frecuencia_Dias_Invierno días</p>
+                            }
+
+                            @if (!string.IsNullOrEmpty(planta.LuzTipo))
+                            {
+                                <p class="small mb-0"><strong>Luz:</strong> @planta.LuzTipo</p>
+                            }
+                        </div>
+
+                        <div class="card-footer bg-white border-0 pt-2 pb-3">
+                            <div class="d-flex justify-content-between flex-wrap gap-2">
+                                @if (planta.NecesitaRiego || !planta.UltimoRiego.HasValue)
+                                {
+                                    <form asp-action="RegistrarRiego" method="post" class="d-inline">
+                                        <input type="hidden" name="id" value="@planta.MiJardinId" />
+                                        <button type="submit" class="btn btn-sm btn-primary">
+                                            <i class="bi bi-droplet-fill"></i> Regar
+                                        </button>
+                                    </form>
+                                }
+
+                                <button type="button" class="btn btn-sm btn-outline-secondary"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#editarModal@(planta.MiJardinId)">
+                                    Editar
+                                </button>
+
+                                <a asp-controller="Plantas"
+                                   asp-action="DetallePlanta"
+                                   asp-route-id="@planta.PlantaId"
+                                   class="btn btn-sm btn-outline-info">
+                                    Detalles
+                                </a>
+
+                                <form asp-action="Eliminar" method="post" class="d-inline"
+                                      onsubmit="return confirm('¿Eliminar esta planta de tu jardín?');">
+                                    <input type="hidden" name="id" value="@planta.MiJardinId" />
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">
+                                        Eliminar
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        @foreach (var planta in Model)
+        {
+            <div class="modal fade" id="editarModal@(planta.MiJardinId)" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <form asp-action="Actualizar" method="post">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Editar @planta.PlantaNombre</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <input type="hidden" name="id" value="@planta.MiJardinId" />
+                                <div class="mb-3">
+                                    <label class="form-label">Apodo</label>
+                                    <input type="text" class="form-control" name="apodo" value="@planta.Apodo" />
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Ubicación</label>
+                                    <input type="text" class="form-control" name="ubicacion" value="@planta.Ubicacion" />
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                <button type="submit" class="btn btn-primary">Guardar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+</div>
+
+@section Scripts {
+    <script>
+        $(function () {
+            if (typeof $.fn.sortable === 'undefined') {
+                alert('Error: jQuery UI no está cargado.');
+                return;
+            }
+
+            $("#listado-plantas").sortable({
+                update: function () {
+                    var ids = $("#listado-plantas > div").map(function () {
+                        return $(this).data("id");
+                    }).get();
+
+                    $.ajax({
+                        url: '/MiJardin/Ordenar',
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify(ids)
+                    });
+                },
+                placeholder: "sortable-placeholder col-md-6 col-lg-4 mb-4",
+                opacity: 0.8,
+                tolerance: "pointer"
+            });
+
+            $("#listado-plantas").on("mousedown", "button, a, input, form", function (e) {
+                e.stopPropagation();
+            });
+        });
+    </script>
+}
