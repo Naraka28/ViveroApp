@@ -26,8 +26,15 @@ namespace ViveroApp.Controllers
         public async Task<IActionResult> DetallePlanta(int id)
         {
             var planta = await repositorioPlantas.ObtenerDetalle(id);
+
+            if (planta == null)
+            {
+                return NotFound();
+            }
+
             return View(planta);
         }
+
         public async Task<IActionResult> PlantasPopulares()
         {
             var plantas = await repositorioPlantas.ObtenerPlantasPopulares();
