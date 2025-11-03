@@ -1,6 +1,213 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "Home Page";
 }
 
-<h1 class="text-4xl font-bold">Home</h1>
+<!-- Hero -->
+<section class="relative min-h-[70vh] flex flex-col items-center justify-center overflow-hidden bg-cover bg-center bg-no-repeat mb-8"
+         style="background-image: url('/images/hero.jpg');">
+
+    <div class="absolute inset-0 bg-black/40"></div>
+
+    <div class="relative z-10 text-center text-white px-4">
+        <h1 class="text-5xl mb-4">
+            Convierte tu <span class="hero-italic">hogar</span>
+            en un lugar lleno de <span class="hero-italic">vida</span>
+        </h1>
+        <p class="text-xl mb-8">
+            Aprende, cuida y crece junto a tus plantas
+        </p>
+        <!-- Search -->
+        <div class="flex gap-2 items-center bg-white rounded-full px-4 py-3 shadow-lg max-w-xl w-full mx-auto">
+            <i class="ph ph-magnifying-glass text-gray-500 text-xl"></i>
+            <input type="text"
+                   placeholder="Busca plantas por nombre, especie o cuidados..."
+                   class="flex-1 bg-transparent outline-none text-gray-800 placeholder-gray-400" />
+        </div>
+    </div>
+</section>
+
+<!-- Buscar por Categoría -->
+<section class="my-[4rem]">
+    <h2 class="text-4xl font-bold text-gray-800 mb-4">
+        Buscar por Categoría
+    </h2>
+    <p class="text-xl text-gray-600 mb-8 max-w-2xl">
+        Encuentra tu planta ideal
+    </p>
+    <div class="category flex flex-wrap gap-6">
+        <button class="w-40">
+            <i class="ph ph-tree"></i>
+            Árboles
+        </button>
+        <button class="w-40">
+            <i class="ph ph-wind"></i>
+            Aromáticas
+        </button>
+        <button class="w-40">
+            <i class="ph ph-flower-tulip"></i>
+            Flores
+        </button>
+        <button class="w-40">
+            <i class="ph ph-orange"></i>
+            Frutales
+        </button>
+        <button class="w-40">
+            <i class="ph ph-grains"></i>
+            Hortalizas
+        </button>
+        <button class="w-40">
+            <i class="ph ph-house-line"></i>
+            Interior
+        </button>
+        <button class="w-40">
+            <i class="ph ph-leaf"></i>
+            Trepadoras
+        </button>
+        <button class="w-40">
+            <i class="ph ph-cactus"></i>
+            Suculentas
+        </button>
+    </div>
+</section>
+
+<!-- Mi Jardín -->
+<section class="bg-[#E9F0EC] rounded-3xl py-16 px-8 my-[4rem]">
+    <div class="max-w-4xl mx-auto text-center">
+        <div class="inline-flex items-center justify-center w-16 h-16 bg-[#BCD0C6] rounded-full text-[#1E6241] mb-6">
+            <i class="ph ph-plant text-3xl"></i>
+        </div>
+
+        <h2 class="text-4xl font-bold text-gray-800 mb-4">
+            Mi Jardín
+        </h2>
+
+        <p class="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+            Organiza tus plantas y mantén tu colección siempre al día
+        </p>
+
+        <button class="bg-[#1E6241] hover:bg-[#195136] text-white px-8 py-3 rounded-xl text-lg">
+            Empezar
+        </button>
+    </div>
+</section>
+
+<!-- Favoritas -->
+<section class="my-[4rem]">
+    <h2 class="text-4xl font-bold text-gray-800 mb-4">
+        Las Favoritas
+    </h2>
+    <p class="text-xl text-gray-600 mb-8 max-w-2xl">
+        Plantas populares perfectas para empezar tu jardín
+    </p>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        
+        <div class="plant-card relative bg-cover bg-center bg-no-repeat overflow-hidden cursor-pointer group transition-all duration-300" style="background-image: url('/images/aloe.jpg');">
+
+            <div class="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-500 group-hover:scale-110" style="background-image: url('/images/aloe.jpg');"></div>
+
+            <div class="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors duration-300"></div>
+
+            <div class="absolute bottom-0 left-0 right-0 p-6 text-white z-10 transform transition-transform duration-300 group-hover:-translate-y-2">
+                <h3 class="text-2xl leading-tight">
+                    Sábila
+                </h3>
+                <p class="text-lg font-light opacity-90">
+                    Aloe Vera
+                </p>
+            </div>
+        </div>
+
+        <div class="plant-card relative bg-cover bg-center bg-no-repeat overflow-hidden cursor-pointer group transition-all duration-300" style="background-image: url('/images/cempasuchil.jpg');">
+
+            <div class="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-500 group-hover:scale-110" style="background-image: url('/images/cempasuchil.jpg');"></div>
+
+            <div class="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors duration-300"></div>
+
+            <div class="absolute bottom-0 left-0 right-0 p-6 text-white z-10 transform transition-transform duration-300 group-hover:-translate-y-2">
+                <h3 class="text-2xl leading-tight">
+                    Cempasúchil
+                </h3>
+                <p class="text-lg font-light opacity-90">
+                    Tageter Erecta
+                </p>
+            </div>
+        </div>
+
+        <div class="plant-card relative bg-cover bg-center bg-no-repeat overflow-hidden cursor-pointer group transition-all duration-300" style="background-image: url('/images/orchid.jpg');">
+
+            <div class="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-500 group-hover:scale-110" style="background-image: url('/images/orchid.jpg');"></div>
+
+            <div class="absolute inset-0 bg-black/30 group-hover:bg-black/50 transition-colors duration-300"></div>
+
+            <div class="absolute bottom-0 left-0 right-0 p-6 text-white z-10 transform transition-transform duration-300 group-hover:-translate-y-2">
+                <h3 class="text-2xl leading-tight">
+                    Orquídea
+                </h3>
+                <p class="text-lg font-light opacity-90">
+                    Orchidaceae
+                </p>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- Recomendaciones -->
+<section class="my-[4rem]">
+    <h2 class="text-4xl font-bold text-gray-800 mb-4">
+        Recomendaciones
+    </h2>
+    <p class="text-xl text-gray-600 mb-8 max-w-2xl">
+        Plantas ideales según tu experiencia y ambiente
+    </p>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <a href="#" class="rec-card cursor-pointer hover:shadow-md transition-shadow duration-300">
+            <div class="inline-flex items-center justify-center w-14 h-14 bg-[#DCFCE7] rounded-full text-[#1AA54D] mb-6">
+                <i class="ph ph-baby text-2xl"></i>
+            </div>
+
+            <h3 class="text-2xl mb-4">
+                Principiantes
+            </h3>
+            <p class="text-l text-gray-800 mb-4">
+                Plantas resistentes y de bajo mantenimiento perfectas para empezar
+            </p>
+            <div class="flex items-center gap-2 text-[#1E6241]">
+                <span class="hover:underline">Ver Plantas</span>
+                <i class="ph ph-arrow-right"></i>
+            </div>
+        </a>
+
+        <a href="#" class="rec-card cursor-pointer hover:shadow-md transition-shadow duration-300">
+            <div class="inline-flex items-center justify-center w-14 h-14 bg-[#FEF3C7] rounded-full text-[#D97706] mb-6">
+                <i class="ph ph-sun-dim text-2xl"></i>
+            </div>
+            <h3 class="text-2xl mb-4">
+                Poca Luz
+            </h3>
+            <p class="text-l text-gray-800 mb-4">
+                Ideales para espacios interiores con luz indirecta
+            </p>
+            <div class="flex items-center gap-2 text-[#1E6241]">
+                <span class="hover:underline">Ver Plantas</span>
+                <i class="ph ph-arrow-right"></i>
+            </div>
+        </a>
+
+        <a href="#" class="rec-card cursor-pointer hover:shadow-md transition-shadow duration-300">
+            <div class="inline-flex items-center justify-center w-14 h-14 bg-[#DBEAFE] rounded-full text-[#2866EB] mb-6">
+                <i class="ph ph-drop text-2xl"></i>
+            </div>
+            <h3 class="text-2xl mb-4">
+                Bajo Riego
+            </h3>
+            <p class="text-l text-gray-800 mb-4">
+                Perfectas si viajas seguido o prefieres regar poco
+            </p>
+            <div class="flex items-center gap-2 text-[#1E6241]">
+                <span class="hover:underline">Ver Plantas</span>
+                <i class="ph ph-arrow-right"></i>
+            </div>
+        </a>
+    </div>
+</section>
