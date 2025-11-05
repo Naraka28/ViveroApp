@@ -11,3 +11,61 @@
     background-color: #f0f0f0;
     min-height: 350px;
 }
+
+.hero-italic {
+    font-family: 'Playfair Display';
+    font-style: italic;
+}
+
+h1{
+    font-family: 'Geist';
+    font-weight: 500;
+    letter-spacing: -2px;
+}
+
+h2, h3 {
+    font-family: 'Playfair Display';
+}
+
+p, button {
+    font-family: 'Geist';
+}
+
+.text-green {
+    color: #1E6241;
+}
+
+.category button {
+    font-family: 'Geist';
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 1rem 2rem;
+    border: 1px solid;
+    border-color: #BCD0C6;
+    border-radius: 12px;
+    background-color: transparent;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.category button:hover {
+    background-color: #E9F0EC;
+    border-color: #195136;
+}
+
+.plant-card {
+    height: 24rem;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.rec-card {
+    padding: 2rem 2rem;
+    border: 1px solid;
+    border-color: #BCD0C6;
+    border-radius: 12px;
+}
