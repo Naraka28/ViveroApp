@@ -4,113 +4,188 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - ViveroApp</title>
-
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-
-    <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
-
-    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
-
-    <!-- jQuery UI CSS -->
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.min.css">
-
-    <!-- Custom CSS -->
     <link rel="stylesheet" href="~/css/custom.css" asp-append-version="true" />
-
-    <!-- Phosphor Icons -->
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@@phosphor-icons/web@2.1.1/src/regular/style.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@@phosphor-icons/web@2.1.1/src/fill/style.css" />
 
+    <style>
+        body {
+            font-family: 'Geist', sans-serif;
+        }
+
+        .hero-italic {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+        }
+    </style>
 </head>
-<body class="flex flex-col min-h-screen">
-    <header>
-        <nav class="bg-white border-b border-gray-200 shadow-sm mb-3">
-            <div class="container mx-auto px-4">
-                <div class="flex items-center justify-between py-3">
-                    <a class="text-xl font-semibold" asp-area="" asp-controller="Home" asp-action="Index">ViveroApp</a>
-                    <button class="md:hidden" type="button" id="navbar-toggler">
-                        <span class="block w-6 h-0.5 bg-gray-600 mb-1"></span>
-                        <span class="block w-6 h-0.5 bg-gray-600 mb-1"></span>
-                        <span class="block w-6 h-0.5 bg-gray-600"></span>
-                    </button>
-                    <div class="hidden md:flex items-center justify-between flex-1 ml-8" id="navbar-collapse">
-                        <ul class="flex flex-col md:flex-row gap-0 md:gap-1 flex-1">
-                            <li class="nav-item">
-                                <a class="block px-3 py-2 text-gray-700 hover:text-gray-900" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="block px-3 py-2 text-gray-700 hover:text-gray-900" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="block px-3 py-2 text-gray-700 hover:text-gray-900" asp-controller="Plantas" asp-action="Index">Plantas</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="block px-3 py-2 text-gray-700 hover:text-gray-900" asp-controller="Plantas" asp-action="PlantasPopulares">Populares</a>
-                            </li>
-                            @if (User.Identity?.IsAuthenticated == true)
-                            {
-                                <li class="nav-item">
-                                    <a class="block px-3 py-2 text-gray-700 hover:text-gray-900" asp-controller="MiJardin" asp-action="Index">Mi Jardín</a>
-                                </li>
-                            }
-                        </ul>
-                        <ul class="flex flex-col md:flex-row gap-0 md:gap-1">
-                            @if (User.Identity?.IsAuthenticated == true)
-                            {
-                                <li class="relative group">
-                                    <a class="block px-3 py-2 text-gray-700 hover:text-gray-900 cursor-pointer" id="userDropdown">
-                                        👤 @User.Identity.Name
-                                    </a>
-                                    <ul class="hidden group-hover:block absolute right-0 mt-0 bg-white border border-gray-200 rounded shadow-lg min-w-[160px] z-50">
-                                        <li>
-                                            <a class="block px-4 py-2 text-gray-700 hover:bg-gray-100" asp-controller="Account" asp-action="Profile">
-                                                Mi Perfil
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a class="block px-4 py-2 text-gray-700 hover:bg-gray-100" asp-controller="Auth" asp-action="ChangePassword">
-                                                Cambiar Contraseña
-                                            </a>
-                                        </li>
-                                        <li><hr class="border-gray-200 my-1"></li>
-                                        <li>
-                                            <form asp-controller="Auth" asp-action="Logout" method="post" class="inline w-full">
-                                                <button type="submit" class="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100">Cerrar Sesión</button>
-                                            </form>
-                                        </li>
-                                    </ul>
-                                </li>
-                            }
-                            else
-                            {
-                                <li class="nav-item">
-                                    <a class="block px-3 py-2 text-gray-700 hover:text-gray-900" asp-controller="Auth" asp-action="Login">Iniciar Sesión</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="block px-3 py-2 text-gray-700 hover:text-gray-900" asp-controller="Auth" asp-action="Registrar">Registrarse</a>
-                                </li>
-                            }
-                        </ul>
-                    </div>
+<body class="flex flex-col min-h-screen bg-white">
+    <!-- Navbar Moderna -->
+    <header class="border-b border-gray-200 bg-white sticky top-0 z-50 shadow-sm">
+        <nav class="container mx-auto px-4">
+            <div class="flex items-center justify-between h-16">
+                <a asp-controller="Home" asp-action="Index" class="flex items-center gap-2 text-2xl font-bold text-[#1E6241] hover:text-[#195136] transition-colors">
+                    <i class="ph ph-plant text-3xl"></i>
+                    <span>ViveroApp</span>
+                </a>
+
+                <div class="hidden md:flex items-center gap-1">
+                    <a asp-controller="Home" asp-action="Index"
+                       class="px-4 py-2 text-gray-700 hover:text-[#1E6241] hover:bg-gray-50 rounded-lg transition-colors font-medium">
+                        Inicio
+                    </a>
+                    <a asp-controller="Plantas" asp-action="Index"
+                       class="px-4 py-2 text-gray-700 hover:text-[#1E6241] hover:bg-gray-50 rounded-lg transition-colors font-medium">
+                        Plantas
+                    </a>
+                    <a asp-controller="Plantas" asp-action="PlantasPopulares"
+                       class="px-4 py-2 text-gray-700 hover:text-[#1E6241] hover:bg-gray-50 rounded-lg transition-colors font-medium">
+                        Populares
+                    </a>
+                    @if (User.Identity?.IsAuthenticated == true)
+                    {
+                        <a asp-controller="MiJardin" asp-action="Index"
+                           class="px-4 py-2 text-gray-700 hover:text-[#1E6241] hover:bg-gray-50 rounded-lg transition-colors font-medium">
+                            Mi Jardín
+                        </a>
+                    }
+                </div>
+
+                <div class="hidden md:flex items-center gap-3">
+                    @if (User.Identity?.IsAuthenticated == true)
+                    {
+                        <div class="relative">
+                            <button id="user-menu-button" class="flex items-center gap-2 px-4 py-2 bg-[#E9F0EC] text-[#1E6241] rounded-lg hover:bg-[#BCD0C6] transition-colors font-medium">
+                                <i class="ph ph-user-circle text-xl"></i>
+                                <span>@User.Identity.Name</span>
+                                <i class="ph ph-caret-down text-sm"></i>
+                            </button>
+
+                            <div id="user-dropdown" class="hidden absolute right-0 mt-2 w-56 bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden z-50">
+                                <a asp-controller="Account" asp-action="Profile"
+                                   class="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-gray-50 transition-colors">
+                                    <i class="ph ph-user text-lg"></i>
+                                    <span>Mi Perfil</span>
+                                </a>
+                                <a asp-controller="Auth" asp-action="ChangePassword"
+                                   class="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-gray-50 transition-colors">
+                                    <i class="ph ph-lock text-lg"></i>
+                                    <span>Cambiar Contraseña</span>
+                                </a>
+                                <hr class="border-gray-200">
+                                <form asp-controller="Auth" asp-action="Logout" method="post" class="m-0">
+                                    <button type="submit" class="flex items-center gap-3 w-full px-4 py-3 text-red-600 hover:bg-red-50 transition-colors">
+                                        <i class="ph ph-sign-out text-lg"></i>
+                                        <span>Cerrar Sesión</span>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <a asp-controller="Auth" asp-action="Login"
+                           class="px-4 py-2 text-gray-700 hover:text-[#1E6241] font-medium transition-colors">
+                            Iniciar Sesión
+                        </a>
+                        <a asp-controller="Auth" asp-action="Registrar"
+                           class="px-6 py-2 bg-[#1E6241] text-white rounded-lg hover:bg-[#195136] transition-colors font-medium shadow-sm">
+                            Registrarse
+                        </a>
+                    }
+                </div>
+
+                <button id="mobile-menu-button" class="md:hidden p-2 text-gray-700 hover:bg-gray-100 rounded-lg">
+                    <i class="ph ph-list text-2xl"></i>
+                </button>
+            </div>
+
+            <div id="mobile-menu" class="hidden md:hidden pb-4 border-t border-gray-200 mt-2 pt-4">
+                <div class="flex flex-col gap-2">
+                    <a asp-controller="Home" asp-action="Index"
+                       class="px-4 py-2 text-gray-700 hover:text-[#1E6241] hover:bg-gray-50 rounded-lg transition-colors">
+                        Inicio
+                    </a>
+                    <a asp-controller="Plantas" asp-action="Index"
+                       class="px-4 py-2 text-gray-700 hover:text-[#1E6241] hover:bg-gray-50 rounded-lg transition-colors">
+                        Plantas
+                    </a>
+                    <a asp-controller="Plantas" asp-action="PlantasPopulares"
+                       class="px-4 py-2 text-gray-700 hover:text-[#1E6241] hover:bg-gray-50 rounded-lg transition-colors">
+                        Populares
+                    </a>
+                    @if (User.Identity?.IsAuthenticated == true)
+                    {
+                        <a asp-controller="MiJardin" asp-action="Index"
+                           class="px-4 py-2 text-gray-700 hover:text-[#1E6241] hover:bg-gray-50 rounded-lg transition-colors">
+                            Mi Jardín
+                        </a>
+                        <hr class="border-gray-200 my-2">
+                        <a asp-controller="Account" asp-action="Profile"
+                           class="px-4 py-2 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors">
+                            Mi Perfil
+                        </a>
+                        <a asp-controller="Auth" asp-action="ChangePassword"
+                           class="px-4 py-2 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors">
+                            Cambiar Contraseña
+                        </a>
+                        <form asp-controller="Auth" asp-action="Logout" method="post" class="m-0">
+                            <button type="submit" class="w-full text-left px-4 py-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors">
+                                Cerrar Sesión
+                            </button>
+                        </form>
+                    }
+                    else
+                    {
+                        <a asp-controller="Auth" asp-action="Login"
+                           class="px-4 py-2 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors">
+                            Iniciar Sesión
+                        </a>
+                        <a asp-controller="Auth" asp-action="Registrar"
+                           class="px-4 py-2 bg-[#1E6241] text-white rounded-lg hover:bg-[#195136] transition-colors text-center">
+                            Registrarse
+                        </a>
+                    }
                 </div>
             </div>
         </nav>
     </header>
-    <div class="container mx-auto px-4">
+
+    <div class="container mx-auto px-4 flex-1">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-t border-gray-200 mt-auto">
-        <div class="container mx-auto px-4 py-3 text-gray-600 text-center">
-            &copy; 2025 - ViveroApp - <a asp-area="" asp-controller="Home" asp-action="Privacy" class="hover:underline">Privacy</a>
+    <footer class="border-t border-gray-200 mt-auto bg-white">
+        <div class="container mx-auto px-4 py-6">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                <div class="flex items-center gap-2 text-[#1E6241]">
+                    <i class="ph ph-plant text-2xl"></i>
+                    <span class="font-bold text-lg">ViveroApp</span>
+                </div>
+                <div class="text-gray-600 text-sm">
+                    &copy; 2025 ViveroApp. Todos los derechos reservados.
+                </div>
+                <div class="flex gap-4">
+                    <a asp-controller="Home" asp-action="Privacy" class="text-gray-600 hover:text-[#1E6241] text-sm transition-colors">
+                        Privacidad
+                    </a>
+                    <a href="#" class="text-gray-600 hover:text-[#1E6241] text-sm transition-colors">
+                        Términos
+                    </a>
+                    <a href="#" class="text-gray-600 hover:text-[#1E6241] text-sm transition-colors">
+                        Contacto
+                    </a>
+                </div>
+            </div>
         </div>
     </footer>
 
@@ -119,10 +194,26 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
 
     <script>
-        // Toggle navbar en mobile
-        document.getElementById('navbar-toggler')?.addEventListener('click', function() {
-            document.getElementById('navbar-collapse').classList.toggle('hidden');
+        document.getElementById('mobile-menu-button')?.addEventListener('click', function() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
         });
+
+        const userMenuButton = document.getElementById('user-menu-button');
+        const userDropdown = document.getElementById('user-dropdown');
+
+        if (userMenuButton && userDropdown) {
+            userMenuButton.addEventListener('click', function(e) {
+                e.stopPropagation();
+                userDropdown.classList.toggle('hidden');
+            });
+
+            document.addEventListener('click', function(e) {
+                if (!userMenuButton.contains(e.target) && !userDropdown.contains(e.target)) {
+                    userDropdown.classList.add('hidden');
+                }
+            });
+        }
     </script>
 
     @await RenderSectionAsync("Scripts", required: false)

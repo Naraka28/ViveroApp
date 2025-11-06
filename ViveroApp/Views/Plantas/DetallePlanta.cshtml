@@ -2,95 +2,213 @@
 @{
     ViewData["Title"] = Model.Nombre;
 }
-<div class="container mx-auto mt-4 mb-5 px-4">
-    <h1 class="text-blue-600 text-3xl font-bold">@Model.Nombre</h1>
-    @if (!string.IsNullOrEmpty(Model.Nombre_Cientifico))
-    {
-        <p class="text-gray-500 italic">@Model.Nombre_Cientifico</p>
-    }
-    <div class="grid grid-cols-1 md:grid-cols-12 gap-4 mt-4">
-        <div class="md:col-span-4">
-            @if (!string.IsNullOrEmpty(Model.Imagen_Url))
+
+<section class="relative h-[50vh] flex items-end overflow-hidden bg-cover bg-center bg-no-repeat mb-8"
+         style="background-image: url('@(string.IsNullOrEmpty(Model.Imagen_Url) ? "/images/default-plant.jpg" : Model.Imagen_Url)');">
+
+    <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+
+    <div class="relative z-10 text-white px-8 pb-12 max-w-7xl mx-auto w-full">
+        <h1 class="text-5xl font-bold mb-2">@Model.Nombre</h1>
+        @if (!string.IsNullOrEmpty(Model.Nombre_Cientifico))
+        {
+            <p class="text-2xl font-light italic opacity-90">@Model.Nombre_Cientifico</p>
+        }
+    </div>
+</section>
+
+<div class="max-w-7xl mx-auto px-8 pb-16">
+
+    <section class="mb-12">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+                <div class="inline-flex items-center justify-center w-12 h-12 bg-green-100 rounded-full text-green-600 mb-4">
+                    <i class="ph ph-chart-bar text-2xl"></i>
+                </div>
+                <h3 class="text-lg font-semibold mb-2">Dificultad</h3>
+                <p class="text-2xl text-gray-800">@Model.Dificultad</p>
+            </div>
+
+            <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+                <div class="inline-flex items-center justify-center w-12 h-12 bg-@(Model.Toxica ? "red" : "blue")-100 rounded-full text-@(Model.Toxica ? "red" : "blue")-600 mb-4">
+                    <i class="ph ph-@(Model.Toxica ? "warning" : "shield-check") text-2xl"></i>
+                </div>
+                <h3 class="text-lg font-semibold mb-2">Toxicidad</h3>
+                <p class="text-2xl text-gray-800">@(Model.Toxica ? "Tóxica" : "No tóxica")</p>
+            </div>
+
+            @if (Model.AlturaMaxCm.HasValue)
             {
-                <img src="@Model.Imagen_Url" alt="@Model.Nombre" class="w-full rounded" />
-            }
-            else
-            {
-                <p class="text-gray-500">Sin imagen disponible</p>
+                <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+                    <div class="inline-flex items-center justify-center w-12 h-12 bg-purple-100 rounded-full text-purple-600 mb-4">
+                        <i class="ph ph-ruler text-2xl"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold mb-2">Altura Máxima</h3>
+                    <p class="text-2xl text-gray-800">@Model.AlturaMaxCm cm</p>
+                </div>
             }
         </div>
-        <div class="md:col-span-8">
-            <p>@Model.Descripcion</p>
-            <ul class="list-none pl-0">
-                <li><strong>Dificultad:</strong> @Model.Dificultad</li>
-                <li><strong>Tóxica:</strong> @(Model.Toxica ? "Sí" : "No")</li>
-                @if (Model.AlturaMaxCm.HasValue)
-                {
-                    <li><strong>Altura máxima:</strong> @Model.AlturaMaxCm cm</li>
-                }
-            </ul>
+
+        <div class="bg-white rounded-2xl p-8 shadow-sm border border-gray-100">
+            <h2 class="text-3xl font-bold text-gray-800 mb-4">Descripción</h2>
+            <p class="text-lg text-gray-600 leading-relaxed">@Model.Descripcion</p>
+
             @if (!string.IsNullOrEmpty(Model.CuidadosEspeciales))
             {
-                <p><strong>Cuidados especiales:</strong> @Model.CuidadosEspeciales</p>
+                <div class="mt-6 p-4 bg-yellow-50 border-l-4 border-yellow-400 rounded-r-lg">
+                    <p class="font-semibold text-yellow-800 mb-2">⚠️ Cuidados Especiales</p>
+                    <p class="text-yellow-700">@Model.CuidadosEspeciales</p>
+                </div>
             }
+
             @if (!string.IsNullOrEmpty(Model.Notas))
             {
-                <p><strong>Notas:</strong> @Model.Notas</p>
+                <div class="mt-4 p-4 bg-blue-50 border-l-4 border-blue-400 rounded-r-lg">
+                    <p class="font-semibold text-blue-800 mb-2">📝 Notas</p>
+                    <p class="text-blue-700">@Model.Notas</p>
+                </div>
             }
         </div>
-    </div>
-    <hr class="my-4 border-gray-300" />
-    <h3 class="text-xl font-bold">Riego - @Model.RiegoNombre</h3>
-    <p>@Model.RiegoDescripcion</p>
-    <ul class="list-none pl-0">
-        <li><strong>Verano:</strong> Cada @Model.FrecuenciaDiasVerano días</li>
-        <li><strong>Invierno:</strong> Cada @Model.FrecuenciaDiasInvierno días</li>
-        <li><strong>Nivel:</strong> @Model.RiegoNivel</li>
-    </ul>
-    @if (!string.IsNullOrEmpty(Model.RiegoRecomendaciones))
-    {
-        <p><strong>Recomendaciones:</strong> @Model.RiegoRecomendaciones</p>
-    }
-    <hr class="my-4 border-gray-300" />
-    <h3 class="text-xl font-bold">Luz - @Model.LuzTipo</h3>
-    <p>@Model.LuzDescripcion</p>
-    <ul class="list-none pl-0">
-        <li><strong>Horas de luz:</strong> @Model.HorasMin - @Model.HorasMax horas</li>
-        <li><strong>Ubicación:</strong> @Model.UbicacionRecomendada</li>
-    </ul>
-    <hr class="my-4 border-gray-300" />
-    <h3 class="text-xl font-bold">Sustrato - @Model.SustratoTipo</h3>
-    <p>@Model.SustratoDescripcion</p>
-    <ul class="list-none pl-0">
-        <li><strong>pH:</strong> @Model.PhRango</li>
-        <li><strong>Drenaje:</strong> @Model.Drenaje</li>
-        <li><strong>Composición:</strong> @Model.Composicion</li>
-    </ul>
+    </section>
+
+    <section class="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-3xl p-8 mb-8">
+        <div class="flex items-center gap-4 mb-6">
+            <div class="inline-flex items-center justify-center w-16 h-16 bg-blue-500 rounded-2xl text-white">
+                <i class="ph ph-drop text-3xl"></i>
+            </div>
+            <div>
+                <h2 class="text-3xl font-bold text-gray-800">Riego</h2>
+                <p class="text-xl text-gray-600">@Model.RiegoNombre</p>
+            </div>
+        </div>
+
+        <p class="text-lg text-gray-700 mb-6">@Model.RiegoDescripcion</p>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="bg-white/80 backdrop-blur rounded-xl p-4">
+                <p class="text-sm text-gray-600 mb-1">Frecuencia Verano</p>
+                <p class="text-2xl font-bold text-gray-800">Cada @Model.FrecuenciaDiasVerano días</p>
+            </div>
+            <div class="bg-white/80 backdrop-blur rounded-xl p-4">
+                <p class="text-sm text-gray-600 mb-1">Frecuencia Invierno</p>
+                <p class="text-2xl font-bold text-gray-800">Cada @Model.FrecuenciaDiasInvierno días</p>
+            </div>
+            <div class="bg-white/80 backdrop-blur rounded-xl p-4">
+                <p class="text-sm text-gray-600 mb-1">Nivel de Riego</p>
+                <p class="text-2xl font-bold text-gray-800">@Model.RiegoNivel</p>
+            </div>
+        </div>
+
+        @if (!string.IsNullOrEmpty(Model.RiegoRecomendaciones))
+        {
+            <div class="mt-6 p-4 bg-blue-100/50 backdrop-blur rounded-xl border-l-4 border-blue-500">
+                <p class="font-semibold text-blue-900 mb-2">💡 Recomendaciones</p>
+                <p class="text-blue-800">@Model.RiegoRecomendaciones</p>
+            </div>
+        }
+    </section>
+
+    <section class="bg-gradient-to-br from-yellow-50 to-orange-50 rounded-3xl p-8 mb-8">
+        <div class="flex items-center gap-4 mb-6">
+            <div class="inline-flex items-center justify-center w-16 h-16 bg-yellow-500 rounded-2xl text-white">
+                <i class="ph ph-sun text-3xl"></i>
+            </div>
+            <div>
+                <h2 class="text-3xl font-bold text-gray-800">Luz</h2>
+                <p class="text-xl text-gray-600">@Model.LuzTipo</p>
+            </div>
+        </div>
+
+        <p class="text-lg text-gray-700 mb-6">@Model.LuzDescripcion</p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="bg-white/80 backdrop-blur rounded-xl p-4">
+                <p class="text-sm text-gray-600 mb-1">Horas de Luz Diarias</p>
+                <p class="text-2xl font-bold text-gray-800">@Model.HorasMin - @Model.HorasMax horas</p>
+            </div>
+            <div class="bg-white/80 backdrop-blur rounded-xl p-4">
+                <p class="text-sm text-gray-600 mb-1">Ubicación Recomendada</p>
+                <p class="text-2xl font-bold text-gray-800">@Model.UbicacionRecomendada</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gradient-to-br from-green-50 to-emerald-50 rounded-3xl p-8 mb-8">
+        <div class="flex items-center gap-4 mb-6">
+            <div class="inline-flex items-center justify-center w-16 h-16 bg-green-600 rounded-2xl text-white">
+                <i class="ph ph-plant text-3xl"></i>
+            </div>
+            <div>
+                <h2 class="text-3xl font-bold text-gray-800">Sustrato</h2>
+                <p class="text-xl text-gray-600">@Model.SustratoTipo</p>
+            </div>
+        </div>
+
+        <p class="text-lg text-gray-700 mb-6">@Model.SustratoDescripcion</p>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="bg-white/80 backdrop-blur rounded-xl p-4">
+                <p class="text-sm text-gray-600 mb-1">pH Recomendado</p>
+                <p class="text-2xl font-bold text-gray-800">@Model.PhRango</p>
+            </div>
+            <div class="bg-white/80 backdrop-blur rounded-xl p-4">
+                <p class="text-sm text-gray-600 mb-1">Nivel de Drenaje</p>
+                <p class="text-2xl font-bold text-gray-800">@Model.Drenaje</p>
+            </div>
+            <div class="bg-white/80 backdrop-blur rounded-xl p-4">
+                <p class="text-sm text-gray-600 mb-1">Composición</p>
+                <p class="text-lg font-bold text-gray-800">@Model.Composicion</p>
+            </div>
+        </div>
+    </section>
+
     @if (Model.Categorias != null && Model.Categorias.Any())
     {
-        <hr class="my-4 border-gray-300" />
-        <h3 class="text-xl font-bold">Categorías</h3>
-        <ul class="flex flex-wrap gap-2">
-            @foreach (var categoria in Model.Categorias)
-            {
-                <li class="inline-block border border-gray-300 rounded px-2 py-1">
-                    @if (!string.IsNullOrEmpty(categoria.Icono))
-                    {
-                        <i class="@categoria.Icono mr-1"></i>
-                    }
-                    @categoria.Nombre
-                </li>
-            }
-        </ul>
+        <section class="mb-8">
+            <h2 class="text-3xl font-bold text-gray-800 mb-6">Categorías</h2>
+            <div class="flex flex-wrap gap-3">
+                @foreach (var categoria in Model.Categorias)
+                {
+                    <span class="inline-flex items-center gap-2 px-6 py-3 bg-white border border-gray-200 rounded-full shadow-sm hover:shadow-md transition-shadow">
+                        @if (!string.IsNullOrEmpty(categoria.Icono))
+                        {
+                            <i class="@categoria.Icono text-lg text-gray-600"></i>
+                        }
+                        <span class="font-medium text-gray-800">@categoria.Nombre</span>
+                    </span>
+                }
+            </div>
+        </section>
     }
-    <div class="mt-4">
+
+    <div class="mt-12 flex gap-4">
         @if (Context.Request.Headers["Referer"].ToString().Contains("MiJardin"))
         {
-            <a asp-controller="MiJardin" asp-action="Index" class="inline-block px-4 py-2 border border-blue-600 text-blue-600 rounded hover:bg-blue-50">Volver a Mi Jardín</a>
+            <a asp-controller="MiJardin" asp-action="Index"
+               class="inline-flex items-center gap-2 px-6 py-3 bg-[#1E6241] hover:bg-[#195136] text-white rounded-xl transition-colors">
+                <i class="ph ph-arrow-left"></i>
+                <span>Volver a Mi Jardín</span>
+            </a>
         }
         else
         {
-            <a asp-controller="Plantas" asp-action="Index" class="inline-block px-4 py-2 border border-blue-600 text-blue-600 rounded hover:bg-blue-50">Volver al listado</a>
+            <a asp-controller="Plantas" asp-action="Index"
+               class="inline-flex items-center gap-2 px-6 py-3 bg-[#1E6241] hover:bg-[#195136] text-white rounded-xl transition-colors">
+                <i class="ph ph-arrow-left"></i>
+                <span>Volver al listado</span>
+            </a>
+        }
+
+        @if (User.Identity?.IsAuthenticated == true)
+        {
+            <form asp-controller="MiJardin" asp-action="Agregar" method="post" class="inline">
+                <input type="hidden" name="plantaId" value="@Model.Id" />
+                <button type="submit"
+                        class="inline-flex items-center gap-2 px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-xl transition-colors">
+                    <i class="ph ph-plus-circle"></i>
+                    <span>Agregar a Mi Jardín</span>
+                </button>
+            </form>
         }
     </div>
 </div>
