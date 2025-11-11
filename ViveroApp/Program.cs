@@ -22,6 +22,7 @@ builder.Services.AddScoped<IRepositorioUsuarios, RepositorioUsuarios>();
 builder.Services.AddScoped<IRepositorioAutenticar, RepositorioAutenticar>();
 builder.Services.AddScoped<IRepositorioMiJardin, RepositorioMiJardin>();
 builder.Services.AddScoped<IRepositorioAdmin, RepositorioAdmin>();
+builder.Services.AddScoped<IServicioArchivos, ServicioArchivos>();
 
 var app = builder.Build();
 

@@ -31,6 +31,8 @@ namespace ViveroApp.Servicios
         Task CrearUsuario(CrearUsuarioDto dto);
         Task ActualizarUsuario(int id, EditarUsuarioDto dto);
         Task EliminarUsuario(int id);
+        Task<IEnumerable<int>> ObtenerCategoriasPlanta(int plantaId);
+        Task AsignarCategoriasPlanta(int plantaId, List<int> categoriasIds);
     }
     public class RepositorioAdmin : IRepositorioAdmin
     {
@@ -65,6 +67,7 @@ namespace ViveroApp.Servicios
         public async Task<EditarPlantaDto> ObtenerPlantaPorId(int id)
         {
             using var connection = new SqlConnection(connectionString);
+
             string sql = @"
         SELECT 
             id AS Id,
@@ -83,18 +86,29 @@ namespace ViveroApp.Servicios
         FROM planta 
         WHERE id = @id";
 
-            return await connection.QueryFirstOrDefaultAsync<EditarPlantaDto>(sql, new { id });
+            var planta = await connection.QueryFirstOrDefaultAsync<EditarPlantaDto>(sql, new { id });
+
+            if (planta != null)
+            {
+                var categoriasIds = await ObtenerCategoriasPlanta(id);
+                planta.CategoriasIds = categoriasIds.ToList();
+            }
+
+            return planta;
         }
 
         public async Task CrearPlanta(CrearPlantaDto dto)
         {
             using var connection = new SqlConnection(connectionString);
 
-            await connection.ExecuteAsync(@"
-                INSERT INTO planta (nombre, nombre_cientifico, descripcion, imagen_url, riego_id, luz_id, sustrato_id, 
-                                    cuidados_especiales, altura_max_cm, dificultad, toxica, notas)
-                VALUES (@Nombre, @NombreCientifico, @Descripcion, @ImagenUrl, @RiegoId, @LuzId, @SustratoId, 
-                        @CuidadosEspeciales, @AlturaMaxCm, @Dificultad, @Toxica, @Notas)", dto);
+            var plantaId = await connection.QuerySingleAsync<int>(@"
+        INSERT INTO planta (nombre, nombre_cientifico, descripcion, imagen_url, riego_id, luz_id, sustrato_id, 
+                            cuidados_especiales, altura_max_cm, dificultad, toxica, notas)
+        OUTPUT INSERTED.id
+        VALUES (@Nombre, @NombreCientifico, @Descripcion, @ImagenUrl, @RiegoId, @LuzId, @SustratoId, 
+                @CuidadosEspeciales, @AlturaMaxCm, @Dificultad, @Toxica, @Notas)", dto);
+
+            await AsignarCategoriasPlanta(plantaId, dto.CategoriasIds);
         }
 
         public async Task ActualizarPlanta(int id, EditarPlantaDto dto)
@@ -102,21 +116,21 @@ namespace ViveroApp.Servicios
             using var connection = new SqlConnection(connectionString);
 
             await connection.ExecuteAsync(@"
-                UPDATE planta SET 
-                    nombre = @Nombre, 
-                    nombre_cientifico = @NombreCientifico, 
-                    descripcion = @Descripcion, 
-                    imagen_url = @ImagenUrl,
-                    riego_id = @RiegoId, 
-                    luz_id = @LuzId, 
-                    sustrato_id = @SustratoId,
-                    cuidados_especiales = @CuidadosEspeciales, 
-                    altura_max_cm = @AlturaMaxCm, 
-                    dificultad = @Dificultad, 
-                    toxica = @Toxica, 
-                    notas = @Notas,
-                    updated_at = GETDATE()
-                WHERE id = @Id", new
+        UPDATE planta SET 
+            nombre = @Nombre, 
+            nombre_cientifico = @NombreCientifico, 
+            descripcion = @Descripcion, 
+            imagen_url = @ImagenUrl,
+            riego_id = @RiegoId, 
+            luz_id = @LuzId, 
+            sustrato_id = @SustratoId,
+            cuidados_especiales = @CuidadosEspeciales, 
+            altura_max_cm = @AlturaMaxCm, 
+            dificultad = @Dificultad, 
+            toxica = @Toxica, 
+            notas = @Notas,
+            updated_at = GETDATE()
+        WHERE id = @Id", new
             {
                 Id = id,
                 dto.Nombre,
@@ -132,6 +146,8 @@ namespace ViveroApp.Servicios
                 dto.Toxica,
                 dto.Notas
             });
+
+            await AsignarCategoriasPlanta(id, dto.CategoriasIds);
         }
 
         public async Task EliminarPlanta(int id)
@@ -201,7 +217,6 @@ namespace ViveroApp.Servicios
                 "UPDATE usuario SET rol = @nuevoRol WHERE id = @id",
                 new { id, nuevoRol });
         }
-        // --- Agregar estos métodos a la clase RepositorioAdmin ---
 
         public async Task<EditarUsuarioDto> ObtenerUsuarioPorId(int id)
         {
@@ -223,7 +238,7 @@ namespace ViveroApp.Servicios
             {
                 dto.Nombre,
                 dto.Email,
-                PasswordHash = passwordHash, // Usamos la variable hasheada
+                PasswordHash = passwordHash,
                 dto.Rol,
                 dto.Activo
             });
@@ -253,6 +268,33 @@ namespace ViveroApp.Servicios
         {
             using var connection = new SqlConnection(connectionString);
             await connection.ExecuteAsync("DELETE FROM usuario WHERE id = @id", new { id });
+        }
+
+        public async Task<IEnumerable<int>> ObtenerCategoriasPlanta(int plantaId)
+        {
+            using var connection = new SqlConnection(connectionString);
+            return await connection.QueryAsync<int>(
+                "SELECT categoria_id FROM planta_categoria WHERE planta_id = @plantaId",
+                new { plantaId });
+        }
+
+        public async Task AsignarCategoriasPlanta(int plantaId, List<int> categoriasIds)
+        {
+            using var connection = new SqlConnection(connectionString);
+
+            await connection.ExecuteAsync(
+                "DELETE FROM planta_categoria WHERE planta_id = @plantaId",
+                new { plantaId });
+
+            if (categoriasIds != null && categoriasIds.Any())
+            {
+                foreach (var categoriaId in categoriasIds)
+                {
+                    await connection.ExecuteAsync(
+                        "INSERT INTO planta_categoria (planta_id, categoria_id) VALUES (@plantaId, @categoriaId)",
+                        new { plantaId, categoriaId });
+                }
+            }
         }
     }
 }

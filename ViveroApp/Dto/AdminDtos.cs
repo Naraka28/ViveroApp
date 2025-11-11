@@ -29,7 +29,10 @@ namespace ViveroApp.Dto
         public string Nombre { get; set; }
         public string? NombreCientifico { get; set; }
         public string? Descripcion { get; set; }
-        public string? ImagenUrl { get; set; }
+        public string ImagenUrl { get; set; }
+
+        [Display(Name = "Imagen de la planta")]
+        public IFormFile ImagenFile { get; set; }
 
         [Required]
         public int RiegoId { get; set; }
@@ -45,11 +48,17 @@ namespace ViveroApp.Dto
         public string Dificultad { get; set; } = "media";
         public bool Toxica { get; set; }
         public string? Notas { get; set; }
+        public List<int> CategoriasIds { get; set; } = new List<int>();
+
     }
 
     public class EditarPlantaDto : CrearPlantaDto
     {
         public int Id { get; set; }
+        [Display(Name = "Cambiar imagen de la planta")]
+        public IFormFile ImagenFile { get; set; }
+        public List<int> CategoriasIds { get; set; } = new List<int>();
+
     }
 
     public class UsuarioAdminDto
