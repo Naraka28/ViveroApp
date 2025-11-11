@@ -1,0 +1,99 @@
+﻿<!-- ============================================ -->
+<!-- Views/Usuario/CambiarPassword.cshtml -->
+<!-- ============================================ -->
+@model ViveroApp.Dto.CambiarContrasenaDto
+
+@{
+    ViewData["Title"] = "Cambiar Contraseña";
+}
+
+<div class="min-h-screen bg-gray-50 py-8">
+    <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
+
+        <!-- Header -->
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-gray-900">Cambiar Contraseña</h1>
+            <p class="text-gray-600 mt-2">Actualiza tu contraseña de acceso</p>
+        </div>
+
+        <!-- Formulario -->
+        <div class="bg-white rounded-lg shadow-md p-8">
+            <form asp-action="CambiarContrasena" method="post">
+                <div asp-validation-summary="ModelOnly" class="mb-6 bg-red-50 border-l-4 border-red-500 p-4 rounded-r-lg"></div>
+
+                <!-- Contraseña Actual -->
+                <div class="mb-6">
+                    <label asp-for="CurrentPassword" class="block text-sm font-semibold text-gray-700 mb-2">
+                        <i class="bi bi-lock text-gray-400 mr-2"></i>
+                        @Html.DisplayNameFor(m => m.CurrentPassword)
+                    </label>
+                    <input asp-for="CurrentPassword"
+                           type="password"
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
+                           placeholder="••••••••" />
+                    <span asp-validation-for="CurrentPassword" class="text-red-600 text-sm mt-1 block"></span>
+                </div>
+
+                <!-- Nueva Contraseña -->
+                <div class="mb-6">
+                    <label asp-for="NewPassword" class="block text-sm font-semibold text-gray-700 mb-2">
+                        <i class="bi bi-key text-gray-400 mr-2"></i>
+                        @Html.DisplayNameFor(m => m.NewPassword)
+                    </label>
+                    <input asp-for="NewPassword"
+                           type="password"
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
+                           placeholder="••••••••" />
+                    <span asp-validation-for="NewPassword" class="text-red-600 text-sm mt-1 block"></span>
+                    <p class="text-gray-500 text-xs mt-2">Mínimo 6 caracteres</p>
+                </div>
+
+                <!-- Confirmar Nueva Contraseña -->
+                <div class="mb-8">
+                    <label asp-for="ConfirmNewPassword" class="block text-sm font-semibold text-gray-700 mb-2">
+                        <i class="bi bi-check2-circle text-gray-400 mr-2"></i>
+                        @Html.DisplayNameFor(m => m.ConfirmNewPassword)
+                    </label>
+                    <input asp-for="ConfirmNewPassword"
+                           type="password"
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
+                           placeholder="••••••••" />
+                    <span asp-validation-for="ConfirmNewPassword" class="text-red-600 text-sm mt-1 block"></span>
+                </div>
+
+                <!-- Botones -->
+                <div class="flex gap-3">
+                    <button type="submit"
+                            class="flex-1 bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors shadow-lg hover:shadow-xl">
+                        <i class="bi bi-check-lg mr-2"></i>
+                        Cambiar Contraseña
+                    </button>
+                    <a asp-action="Perfil"
+                       class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-3 px-6 rounded-lg transition-colors text-center">
+                        Cancelar
+                    </a>
+                </div>
+            </form>
+        </div>
+
+        <!-- Consejos de Seguridad -->
+        <div class="mt-6 bg-yellow-50 border-l-4 border-yellow-500 p-4 rounded-r-lg">
+            <div class="flex items-start">
+                <i class="bi bi-shield-check text-yellow-600 text-xl mr-3 mt-1"></i>
+                <div>
+                    <p class="text-yellow-800 font-medium mb-2">Consejos de Seguridad</p>
+                    <ul class="text-yellow-700 text-sm space-y-1 list-disc list-inside">
+                        <li>Usa al menos 8 caracteres</li>
+                        <li>Combina mayúsculas, minúsculas y números</li>
+                        <li>No uses contraseñas obvias como tu nombre o fecha de nacimiento</li>
+                        <li>No compartas tu contraseña con nadie</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

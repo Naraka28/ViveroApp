@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using ViveroApp.Models;
 using ViveroApp.Dto;
+using ViveroApp.Models;
 
 namespace ViveroApp.Servicios
 {
@@ -108,14 +108,36 @@ namespace ViveroApp.Servicios
             );
         }
 
-        public Task<Usuario> ObtenerUsuario()
+        public async Task<Usuario> ObtenerUsuario()
         {
-            throw new NotImplementedException();
+            var userId = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(userId))
+                return null;
+
+            return await repositorioUsuario.ObtenerPorId(int.Parse(userId));
         }
 
-        public Task<bool> CambiarContrasena(int usuarioId, string currentPassword, string newPassword)
+        public async Task<bool> CambiarContrasena(int usuarioId, string currentPassword, string newPassword)
         {
-            throw new NotImplementedException();
+            var usuario = await repositorioUsuario.ObtenerPorId(usuarioId);
+
+            if (usuario == null)
+                return false;
+
+            // Verificar contraseña actual
+            bool passwordValida = BCrypt.Net.BCrypt.Verify(currentPassword, usuario.Password);
+
+            if (!passwordValida)
+                return false;
+
+            // Hash de la nueva contraseña
+            string newPasswordHash = BCrypt.Net.BCrypt.HashPassword(newPassword);
+
+            // Actualizar contraseña
+            await repositorioUsuario.ActualizarPassword(usuarioId, newPasswordHash);
+
+            return true;
         }
     }
 }

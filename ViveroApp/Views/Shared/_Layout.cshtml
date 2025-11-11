@@ -76,12 +76,12 @@
                             </button>
 
                             <div id="user-dropdown" class="hidden absolute right-0 mt-2 w-56 bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden z-50">
-                                <a asp-controller="Account" asp-action="Profile"
+                                <a asp-controller="Usuario" asp-action="Perfil"
                                    class="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-gray-50 transition-colors">
                                     <i class="ph ph-user text-lg"></i>
                                     <span>Mi Perfil</span>
                                 </a>
-                                <a asp-controller="Auth" asp-action="ChangePassword"
+                                <a asp-controller="Usuario" asp-action="CambiarContrasena"
                                    class="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-gray-50 transition-colors">
                                     <i class="ph ph-lock text-lg"></i>
                                     <span>Cambiar Contraseña</span>
@@ -135,11 +135,11 @@
                             Mi Jardín
                         </a>
                         <hr class="border-gray-200 my-2">
-                        <a asp-controller="Account" asp-action="Profile"
+                        <a asp-controller="Usuario" asp-action="Perfil"
                            class="px-4 py-2 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors">
                             Mi Perfil
                         </a>
-                        <a asp-controller="Auth" asp-action="ChangePassword"
+                        <a asp-controller="Usuario" asp-action="CambiarContrasena"
                            class="px-4 py-2 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors">
                             Cambiar Contraseña
                         </a>
