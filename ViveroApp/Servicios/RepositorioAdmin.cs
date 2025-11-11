@@ -33,6 +33,9 @@ namespace ViveroApp.Servicios
         Task EliminarUsuario(int id);
         Task<IEnumerable<int>> ObtenerCategoriasPlanta(int plantaId);
         Task AsignarCategoriasPlanta(int plantaId, List<int> categoriasIds);
+
+        Task<CategoriaDto> ObtenerCategoriaPorId(int id);
+
     }
     public class RepositorioAdmin : IRepositorioAdmin
     {
@@ -156,32 +159,6 @@ namespace ViveroApp.Servicios
             await connection.ExecuteAsync("DELETE FROM planta WHERE id = @id", new { id });
         }
 
-        public async Task<IEnumerable<CategoriaDto>> ObtenerCategorias()
-        {
-            using var connection = new SqlConnection(connectionString);
-            return await connection.QueryAsync<CategoriaDto>("SELECT * FROM categoria ORDER BY nombre");
-        }
-
-        public async Task CrearCategoria(CategoriaDto dto)
-        {
-            using var connection = new SqlConnection(connectionString);
-            await connection.ExecuteAsync(
-                "INSERT INTO categoria (nombre, descripcion, icono) VALUES (@Nombre, @Descripcion, @Icono)", dto);
-        }
-
-        public async Task ActualizarCategoria(int id, CategoriaDto dto)
-        {
-            using var connection = new SqlConnection(connectionString);
-            await connection.ExecuteAsync(@"
-                UPDATE categoria SET nombre = @Nombre, descripcion = @Descripcion, icono = @Icono 
-                WHERE id = @Id", new { Id = id, dto.Nombre, dto.Descripcion, dto.Icono });
-        }
-
-        public async Task EliminarCategoria(int id)
-        {
-            using var connection = new SqlConnection(connectionString);
-            await connection.ExecuteAsync("DELETE FROM categoria WHERE id = @id", new { id });
-        }
 
         public async Task<IEnumerable<Riego>> ObtenerRiegos()
         {
@@ -295,6 +272,72 @@ namespace ViveroApp.Servicios
                         new { plantaId, categoriaId });
                 }
             }
+        }
+
+        public async Task<CategoriaDto> ObtenerCategoriaPorId(int id)
+        {
+            using var connection = new SqlConnection(connectionString);
+
+            string sql = @"
+        SELECT 
+            id AS Id,
+            nombre AS Nombre,
+            descripcion AS Descripcion,
+            icono AS Icono
+        FROM categoria 
+        WHERE id = @id";
+
+            return await connection.QueryFirstOrDefaultAsync<CategoriaDto>(sql, new { id });
+        }
+
+        public async Task<IEnumerable<CategoriaDto>> ObtenerCategorias()
+        {
+            using var connection = new SqlConnection(connectionString);
+
+            string sql = @"
+        SELECT 
+            id AS Id,
+            nombre AS Nombre,
+            descripcion AS Descripcion,
+            icono AS Icono
+        FROM categoria 
+        ORDER BY nombre";
+
+            return await connection.QueryAsync<CategoriaDto>(sql);
+        }
+
+        public async Task CrearCategoria(CategoriaDto dto)
+        {
+            using var connection = new SqlConnection(connectionString);
+
+            await connection.ExecuteAsync(@"
+        INSERT INTO categoria (nombre, descripcion, icono)
+        VALUES (@Nombre, @Descripcion, @Icono)", dto);
+        }
+
+        public async Task ActualizarCategoria(int id, CategoriaDto dto)
+        {
+            using var connection = new SqlConnection(connectionString);
+
+            await connection.ExecuteAsync(@"
+        UPDATE categoria 
+        SET nombre = @Nombre, 
+            descripcion = @Descripcion, 
+            icono = @Icono
+        WHERE id = @Id",
+                new
+                {
+                    Id = id,
+                    dto.Nombre,
+                    dto.Descripcion,
+                    dto.Icono,
+                });
+        }
+
+        public async Task EliminarCategoria(int id)
+        {
+            using var connection = new SqlConnection(connectionString);
+            await connection.ExecuteAsync("DELETE FROM categoria WHERE id = @id", new { id });
         }
     }
 }

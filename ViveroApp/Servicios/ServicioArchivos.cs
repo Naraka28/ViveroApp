@@ -1,23 +1,27 @@
-﻿namespace ViveroApp.Servicios
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+
+namespace ViveroApp.Servicios
 {
     public interface IServicioArchivos
     {
-        Task<string> GuardarImagen(IFormFile archivo, string carpeta = "plantas");
+        Task<string> GuardarImagen(IFormFile archivo, string carpeta);
         Task<bool> EliminarImagen(string rutaImagen);
         bool ValidarImagen(IFormFile archivo);
     }
+
     public class ServicioArchivos : IServicioArchivos
     {
         private readonly IWebHostEnvironment environment;
-        private readonly string[] extensionesPermitidas = { ".jpg", ".jpeg", ".png", ".gif", ".webp" };
-        private readonly long tamañoMaximoBytes = 5 * 1024 * 1024; // 5 MB
+        private readonly string[] extensionesPermitidas = { ".jpg", ".jpeg", ".png", ".gif", ".webp",".svg" };
+        private readonly long tamañoMaximoBytes = 5 * 1024 * 1024;
 
         public ServicioArchivos(IWebHostEnvironment environment)
         {
             this.environment = environment;
         }
 
-        public async Task<string> GuardarImagen(IFormFile archivo, string carpeta = "plantas")
+        public async Task<string> GuardarImagen(IFormFile archivo, string carpeta)
         {
             if (archivo == null || archivo.Length == 0)
                 return null;
@@ -25,33 +29,29 @@
             if (!ValidarImagen(archivo))
                 throw new Exception("Archivo de imagen inválido");
 
-            var baseCarpetaImagenes = Path.Combine(environment.WebRootPath, "Images");
+            if (string.IsNullOrWhiteSpace(carpeta))
+                throw new ArgumentException("La carpeta es requerida", nameof(carpeta));
 
-            var carpetaAssets = Path.Combine(baseCarpetaImagenes, carpeta);
+            carpeta = carpeta.Trim().ToLower();
 
-            if (!Directory.Exists(carpetaAssets))
+            var baseCarpetaImagenes = Path.Combine(environment.WebRootPath, "images");
+            var carpetaDestino = Path.Combine(baseCarpetaImagenes, carpeta);
+
+            if (!Directory.Exists(carpetaDestino))
             {
-                Directory.CreateDirectory(carpetaAssets);
+                Directory.CreateDirectory(carpetaDestino);
             }
 
             var extension = Path.GetExtension(archivo.FileName).ToLowerInvariant();
             var nombreArchivo = $"{Guid.NewGuid()}{extension}";
-            var rutaCompleta = Path.Combine(carpetaAssets, nombreArchivo);
+            var rutaCompleta = Path.Combine(carpetaDestino, nombreArchivo);
 
             using (var stream = new FileStream(rutaCompleta, FileMode.Create))
             {
                 await archivo.CopyToAsync(stream);
             }
 
-            var urlBase = "/Images";
-
-            if (!string.IsNullOrEmpty(carpeta))
-            {
-                var urlCarpeta = carpeta.Replace(Path.DirectorySeparatorChar, '/').TrimStart('/');
-                return $"{urlBase}/{urlCarpeta}/{nombreArchivo}";
-            }
-
-            return $"{urlBase}/{nombreArchivo}";
+            return $"/images/{carpeta}/{nombreArchivo}";
         }
 
         public async Task<bool> EliminarImagen(string rutaImagen)
@@ -61,17 +61,20 @@
 
             try
             {
-                var rutaFisica = Path.Combine(environment.WebRootPath, rutaImagen.TrimStart('/').Replace('/', Path.DirectorySeparatorChar));
+                var rutaFisica = Path.Combine(
+                    environment.WebRootPath,
+                    rutaImagen.TrimStart('/').Replace('/', Path.DirectorySeparatorChar)
+                );
 
                 if (File.Exists(rutaFisica))
                 {
-                    File.Delete(rutaFisica);
+                    await Task.Run(() => File.Delete(rutaFisica));
                     return true;
                 }
 
                 return false;
             }
-            catch
+            catch (Exception)
             {
                 return false;
             }
@@ -89,7 +92,15 @@
             if (!extensionesPermitidas.Contains(extension))
                 return false;
 
-            var tiposMimePermitidos = new[] { "image/jpeg", "image/jpg", "image/png", "image/gif", "image/webp" };
+            var tiposMimePermitidos = new[] {
+                "image/jpeg",
+                "image/jpg",
+                "image/png",
+                "image/gif",
+                "image/webp",
+                "image/svg+xml"
+            };
+
             if (!tiposMimePermitidos.Contains(archivo.ContentType.ToLower()))
                 return false;
 

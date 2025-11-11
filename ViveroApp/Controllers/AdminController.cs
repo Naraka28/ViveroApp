@@ -30,6 +30,8 @@ namespace ViveroApp.Controllers
             return View(stats);
         }
 
+        #region Plantas
+
         public async Task<IActionResult> Plantas()
         {
             var plantas = await repositorioAdmin.ObtenerTodasPlantas();
@@ -49,11 +51,12 @@ namespace ViveroApp.Controllers
             {
                 if (!servicioArchivos.ValidarImagen(dto.ImagenFile))
                 {
-                    ModelState.AddModelError(nameof(dto.ImagenFile), "Archivo de imagen inválido (debe ser .jpg, .png, .webp, etc. y pesar menos de 5MB).");
+                    ModelState.AddModelError(nameof(dto.ImagenFile),
+                        "Archivo de imagen inválido (debe ser .jpg, .png, .webp, etc. y pesar menos de 5MB).");
                 }
                 else
                 {
-                    dto.ImagenUrl = await servicioArchivos.GuardarImagen(dto.ImagenFile, "");
+                    dto.ImagenUrl = await servicioArchivos.GuardarImagen(dto.ImagenFile, "plantas");
                 }
             }
 
@@ -84,11 +87,12 @@ namespace ViveroApp.Controllers
             {
                 if (!servicioArchivos.ValidarImagen(dto.ImagenFile))
                 {
-                    ModelState.AddModelError(nameof(dto.ImagenFile), "Nuevo archivo de imagen inválido (debe ser .jpg, .png, .webp, etc. y pesar menos de 5MB).");
+                    ModelState.AddModelError(nameof(dto.ImagenFile),
+                        "Nuevo archivo de imagen inválido (debe ser .jpg, .png, .webp, etc. y pesar menos de 5MB).");
                 }
                 else
                 {
-                    var nuevaRuta = await servicioArchivos.GuardarImagen(dto.ImagenFile, "");
+                    var nuevaRuta = await servicioArchivos.GuardarImagen(dto.ImagenFile, "plantas");
 
                     if (!string.IsNullOrEmpty(dto.ImagenUrl))
                     {
@@ -101,14 +105,12 @@ namespace ViveroApp.Controllers
             if (!ModelState.IsValid)
             {
                 await CargarDatosPlanta();
-
                 var plantaOriginal = await repositorioAdmin.ObtenerPlantaPorId(id);
                 dto.CategoriasIds = plantaOriginal.CategoriasIds;
                 if (dto.ImagenFile == null)
                 {
                     dto.ImagenUrl = plantaOriginal.ImagenUrl;
                 }
-
                 return View("Plantas/Editar", dto);
             }
 
@@ -126,15 +128,21 @@ namespace ViveroApp.Controllers
                 TempData["Error"] = "La planta no fue encontrada.";
                 return RedirectToAction(nameof(Plantas));
             }
+
             await repositorioAdmin.EliminarPlanta(id);
 
             if (!string.IsNullOrEmpty(planta.ImagenUrl))
             {
-                await servicioArchivos.EliminarImagen(planta.ImagenUrl); 
+                await servicioArchivos.EliminarImagen(planta.ImagenUrl);
             }
-            TempData["Mensaje"] = "Planta eliminada exitosamente"; 
-            return RedirectToAction(nameof(Plantas)); 
+
+            TempData["Mensaje"] = "Planta eliminada exitosamente";
+            return RedirectToAction(nameof(Plantas));
         }
+
+        #endregion
+
+        #region Categorías
 
         public async Task<IActionResult> Categorias()
         {
@@ -142,17 +150,77 @@ namespace ViveroApp.Controllers
             return View("Categorias/Index", categorias);
         }
 
+        public IActionResult CrearCategoria()
+        {
+            return View("Categorias/Crear");
+        }
+
         [HttpPost]
         public async Task<IActionResult> CrearCategoria(CategoriaDto dto)
         {
+            if (dto.ImagenFile != null)
+            {
+                if (!servicioArchivos.ValidarImagen(dto.ImagenFile))
+                {
+                    ModelState.AddModelError(nameof(dto.ImagenFile),
+                        "Archivo de imagen inválido (debe ser .jpg, .png, .webp, etc. y pesar menos de 5MB).");
+                }
+                else
+                {
+                    dto.Icono = await servicioArchivos.GuardarImagen(dto.ImagenFile, "categorias");
+                }
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return View("Categorias/Crear", dto);
+            }
+
             await repositorioAdmin.CrearCategoria(dto);
             TempData["Mensaje"] = "Categoría creada exitosamente";
             return RedirectToAction(nameof(Categorias));
         }
 
-        [HttpPost]
-        public async Task<IActionResult> ActualizarCategoria(int id, CategoriaDto dto)
+        public async Task<IActionResult> EditarCategoria(int id)
         {
+            var categoria = await repositorioAdmin.ObtenerCategoriaPorId(id);
+            if (categoria == null) return NotFound();
+
+            return View("Categorias/Editar", categoria);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditarCategoria(int id, CategoriaDto dto)
+        {
+            if (dto.ImagenFile != null)
+            {
+                if (!servicioArchivos.ValidarImagen(dto.ImagenFile))
+                {
+                    ModelState.AddModelError(nameof(dto.ImagenFile),
+                        "Nuevo archivo de imagen inválido (debe ser .jpg, .png, .webp, etc. y pesar menos de 5MB).");
+                }
+                else
+                {
+                    var nuevaRuta = await servicioArchivos.GuardarImagen(dto.ImagenFile, "categorias");
+
+                    if (!string.IsNullOrEmpty(dto.Icono))
+                    {
+                        await servicioArchivos.EliminarImagen(dto.Icono);
+                    }
+                    dto.Icono = nuevaRuta;
+                }
+            }
+
+            if (!ModelState.IsValid)
+            {
+                var categoriaOriginal = await repositorioAdmin.ObtenerCategoriaPorId(id);
+                if (dto.ImagenFile == null)
+                {
+                    dto.Icono = categoriaOriginal.Icono;
+                }
+                return View("Categorias/Editar", dto);
+            }
+
             await repositorioAdmin.ActualizarCategoria(id, dto);
             TempData["Mensaje"] = "Categoría actualizada exitosamente";
             return RedirectToAction(nameof(Categorias));
@@ -161,10 +229,27 @@ namespace ViveroApp.Controllers
         [HttpPost]
         public async Task<IActionResult> EliminarCategoria(int id)
         {
+            var categoria = await repositorioAdmin.ObtenerCategoriaPorId(id);
+            if (categoria == null)
+            {
+                TempData["Error"] = "La categoría no fue encontrada.";
+                return RedirectToAction(nameof(Categorias));
+            }
+
             await repositorioAdmin.EliminarCategoria(id);
+
+            if (!string.IsNullOrEmpty(categoria.Icono))
+            {
+                await servicioArchivos.EliminarImagen(categoria.Icono);
+            }
+
             TempData["Mensaje"] = "Categoría eliminada exitosamente";
             return RedirectToAction(nameof(Categorias));
         }
+
+        #endregion
+
+        #region Usuarios
 
         public async Task<IActionResult> Usuarios()
         {
@@ -227,6 +312,10 @@ namespace ViveroApp.Controllers
             return RedirectToAction(nameof(Usuarios));
         }
 
+        #endregion
+
+        #region Otros
+
         public async Task<IActionResult> Riegos()
         {
             var riegos = await repositorioAdmin.ObtenerRiegos();
@@ -244,6 +333,8 @@ namespace ViveroApp.Controllers
             var sustratos = await repositorioAdmin.ObtenerSustratos();
             return View(sustratos);
         }
+
+        #endregion
 
         private async Task CargarDatosPlanta()
         {
