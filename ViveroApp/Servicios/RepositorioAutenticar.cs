@@ -27,9 +27,9 @@ namespace ViveroApp.Servicios
         }
 
         public async Task<(bool Success, string Message, Usuario? Usuario)> Login(
-            string email,
-            string password,
-            bool rememberMe)
+    string email,
+    string password,
+    bool rememberMe)
         {
             var usuario = await repositorioUsuario.ObtenerPorEmail(email);
 
@@ -47,12 +47,13 @@ namespace ViveroApp.Servicios
             await repositorioUsuario.ActualizarUltimoAcceso(usuario.Id);
 
             var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.NameIdentifier, usuario.Id.ToString()),
-                new Claim(ClaimTypes.Name, usuario.Nombre),
-                new Claim(ClaimTypes.Email, usuario.Email),
-                new Claim("FechaRegistro", usuario.FechaRegistro.ToString("o"))
-            };
+    {
+        new Claim(ClaimTypes.NameIdentifier, usuario.Id.ToString()),
+        new Claim(ClaimTypes.Name, usuario.Nombre),
+        new Claim(ClaimTypes.Email, usuario.Email),
+        new Claim("FechaRegistro", usuario.FechaRegistro.ToString("o")),
+        new Claim("Rol", usuario.Rol ?? "usuario")
+    };
 
             var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
             var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
@@ -73,6 +74,7 @@ namespace ViveroApp.Servicios
 
             return (true, "Inicio de sesión exitoso", usuario);
         }
+
         public async Task<(bool Success, string Message, int? UsuarioId)> Registrar(RegistroDto dto)
         {
             var usuarioExistente = await repositorioUsuario.ObtenerPorEmail(dto.Email);
@@ -90,7 +92,8 @@ namespace ViveroApp.Servicios
                 FechaRegistro = DateTime.Now,
                 Activo = true,
                 CreatedAt = DateTime.Now,
-                UpdatedAt = DateTime.Now
+                UpdatedAt = DateTime.Now,
+                Rol = "usuario"
             });
 
             if (resultado.Success)

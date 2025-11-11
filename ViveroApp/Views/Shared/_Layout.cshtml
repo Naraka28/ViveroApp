@@ -27,7 +27,6 @@
     </style>
 </head>
 <body class="flex flex-col min-h-screen bg-white">
-    <!-- Navbar Moderna -->
     <header class="border-b border-gray-200 bg-white sticky top-0 z-50 shadow-sm">
         <nav class="container mx-auto px-4">
             <div class="flex items-center justify-between h-16">
@@ -55,6 +54,14 @@
                            class="px-4 py-2 text-gray-700 hover:text-[#1E6241] hover:bg-gray-50 rounded-lg transition-colors font-medium">
                             Mi Jardín
                         </a>
+
+                        @if (User.FindFirst("Rol")?.Value == "admin")
+                        {
+                            <a asp-controller="Admin" asp-action="Index"
+                               class="px-4 py-2 text-purple-700 hover:text-purple-900 hover:bg-purple-50 rounded-lg transition-colors font-medium">
+                                <i class="ph ph-gear"></i> Admin
+                            </a>
+                        }
                     }
                 </div>
 
