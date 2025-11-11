@@ -1,0 +1,86 @@
+﻿@model ViveroApp.Dto.EstadisticasDto
+@{
+    ViewData["Title"] = "Panel de Administración";
+}
+
+<section class="my-[3rem]">
+    <h2 class="text-4xl font-bold text-gray-800 mb-4">
+        <i class="ph ph-gauge"></i> Panel de Administración
+    </h2>
+    <p class="text-xl text-gray-600 mb-8">
+        Gestiona tu sistema de plantas
+    </p>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div class="bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl p-6 border border-green-100">
+            <div class="flex items-center justify-between mb-4">
+                <div class="w-12 h-12 bg-green-500 rounded-xl flex items-center justify-center">
+                    <i class="ph ph-plant text-white text-2xl"></i>
+                </div>
+                <span class="text-3xl font-bold text-gray-800">@Model.TotalPlantas</span>
+            </div>
+            <h3 class="text-lg font-semibold text-gray-700">Total Plantas</h3>
+        </div>
+        <div class="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl p-6 border border-blue-100">
+            <div class="flex items-center justify-between mb-4">
+                <div class="w-12 h-12 bg-blue-500 rounded-xl flex items-center justify-center">
+                    <i class="ph ph-users text-white text-2xl"></i>
+                </div>
+                <span class="text-3xl font-bold text-gray-800">@Model.TotalUsuarios</span>
+            </div>
+            <h3 class="text-lg font-semibold text-gray-700">Usuarios</h3>
+        </div>
+        <div class="bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl p-6 border border-purple-100">
+            <div class="flex items-center justify-between mb-4">
+                <div class="w-12 h-12 bg-purple-500 rounded-xl flex items-center justify-center">
+                    <i class="ph ph-tag text-white text-2xl"></i>
+                </div>
+                <span class="text-3xl font-bold text-gray-800">@Model.TotalCategorias</span>
+            </div>
+            <h3 class="text-lg font-semibold text-gray-700">Categorías</h3>
+        </div>
+        <div class="bg-gradient-to-br from-yellow-50 to-orange-50 rounded-2xl p-6 border border-yellow-100">
+            <div class="flex items-center justify-between mb-4">
+                <div class="w-12 h-12 bg-yellow-500 rounded-xl flex items-center justify-center">
+                    <i class="ph ph-flower text-white text-2xl"></i>
+                </div>
+                <span class="text-3xl font-bold text-gray-800">@Model.PlantasEnJardines</span>
+            </div>
+            <h3 class="text-lg font-semibold text-gray-700">Plantas en Jardines</h3>
+        </div>
+    </div>
+
+    <h3 class="text-2xl font-bold text-gray-800 mb-4">Accesos Rápidos</h3>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <a asp-action="Plantas" class="bg-white rounded-xl p-6 border border-gray-200 hover:shadow-lg transition-shadow">
+            <i class="ph ph-plant text-4xl text-green-600 mb-3"></i>
+            <h4 class="text-lg font-semibold mb-2">Gestionar Plantas</h4>
+            <p class="text-gray-600 text-sm">Crear, editar y eliminar plantas</p>
+        </a>
+        <a asp-action="Categorias" class="bg-white rounded-xl p-6 border border-gray-200 hover:shadow-lg transition-shadow">
+            <i class="ph ph-tag text-4xl text-purple-600 mb-3"></i>
+            <h4 class="text-lg font-semibold mb-2">Categorías</h4>
+            <p class="text-gray-600 text-sm">Administrar categorías de plantas</p>
+        </a>
+        <a asp-action="Usuarios" class="bg-white rounded-xl p-6 border border-gray-200 hover:shadow-lg transition-shadow">
+            <i class="ph ph-users text-4xl text-blue-600 mb-3"></i>
+            <h4 class="text-lg font-semibold mb-2">Usuarios</h4>
+            <p class="text-gray-600 text-sm">Gestionar usuarios y roles</p>
+        </a>
+        <a asp-action="Riegos" class="bg-white rounded-xl p-6 border border-gray-200 hover:shadow-lg transition-shadow">
+            <i class="ph ph-drop text-4xl text-cyan-600 mb-3"></i>
+            <h4 class="text-lg font-semibold mb-2">Tipos de Riego</h4>
+            <p class="text-gray-600 text-sm">Gestionar tipos de riego</p>
+        </a>
+        <a asp-action="Luces" class="bg-white rounded-xl p-6 border border-gray-200 hover:shadow-lg transition-shadow">
+            <i class="ph ph-sun text-4xl text-yellow-600 mb-3"></i>
+            <h4 class="text-lg font-semibold mb-2">Tipos de Luz</h4>
+            <p class="text-gray-600 text-sm">Gestionar requisitos de luz</p>
+        </a>
+        <a asp-action="Sustratos" class="bg-white rounded-xl p-6 border border-gray-200 hover:shadow-lg transition-shadow">
+            <i class="ph ph-tree text-4xl text-amber-600 mb-3"></i>
+            <h4 class="text-lg font-semibold mb-2">Tipos de Sustrato</h4>
+            <p class="text-gray-600 text-sm">Gestionar tipos de sustrato</p>
+        </a>
+    </div>
+</section>

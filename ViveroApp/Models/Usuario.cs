@@ -14,7 +14,7 @@ namespace ViveroApp.Models
         public bool Activo { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
-
+        public string Rol { get; set; }
         public virtual ICollection<MiJardin> MiJardin { get; set; }
     }
 }

@@ -1,0 +1,85 @@
+﻿@model IEnumerable<ViveroApp.Dto.DetallePlantaDto>
+@{
+    ViewData["Title"] = "Gestionar Plantas";
+}
+
+<section class="my-[3rem]">
+    <div class="flex justify-between items-center mb-6">
+        <div>
+            <h2 class="text-4xl font-bold text-gray-800">Gestionar Plantas</h2>
+            <p class="text-xl text-gray-600 mt-2">@Model.Count() plantas registradas</p>
+        </div>
+        <a asp-action="CrearPlanta" class="bg-[#1E6241] hover:bg-[#195136] text-white px-6 py-3 rounded-xl inline-flex items-center gap-2">
+            <i class="ph ph-plus-circle"></i>
+            <span>Nueva Planta</span>
+        </a>
+    </div>
+
+    @if (TempData["Mensaje"] != null)
+    {
+        <div class="bg-green-50 border-l-4 border-green-500 text-green-800 px-6 py-4 rounded-r-xl mb-6">
+            @TempData["Mensaje"]
+        </div>
+    }
+
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+        <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+                <tr>
+                    <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">Imagen</th>
+                    <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">Nombre</th>
+                    <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">Nombre Científico</th>
+                    <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">Dificultad</th>
+                    <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">Tóxica</th>
+                    <th class="px-6 py-4 text-right text-sm font-semibold text-gray-700">Acciones</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200">
+                @foreach (var planta in Model)
+                {
+                    <tr class="hover:bg-gray-50">
+                        <td class="px-6 py-4">
+                            @if (!string.IsNullOrEmpty(planta.ImagenUrl))
+                            {
+                                <img src="@planta.ImagenUrl" alt="@planta.Nombre" class="w-16 h-16 object-cover rounded-lg">
+                            }
+                            else
+                            {
+                                <div class="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center">
+                                    <i class="ph ph-plant text-gray-400 text-2xl"></i>
+                                </div>
+                            }
+                        </td>
+                        <td class="px-6 py-4 font-medium text-gray-900">@planta.Nombre</td>
+                        <td class="px-6 py-4 text-gray-600 italic">@planta.NombreCientifico</td>
+                        <td class="px-6 py-4">
+                            <span class="px-3 py-1 rounded-full text-sm bg-@(planta.Dificultad == "baja" ? "green" : planta.Dificultad == "media" ? "yellow" : "red")-100 text-@(planta.Dificultad == "baja" ? "green" : planta.Dificultad == "media" ? "yellow" : "red")-800">
+                                @planta.Dificultad
+                            </span>
+                        </td>
+                        <td class="px-6 py-4">
+                            @if (planta.Toxica)
+                            {
+                                <span class="px-3 py-1 rounded-full text-sm bg-red-100 text-red-800">Sí</span>
+                            }
+                            else
+                            {
+                                <span class="px-3 py-1 rounded-full text-sm bg-green-100 text-green-800">No</span>
+                            }
+                        </td>
+                        <td class="px-6 py-4 text-right space-x-2">
+                            <a asp-action="EditarPlanta" asp-route-id="@planta.Id" class="text-blue-600 hover:text-blue-800">
+                                <i class="ph ph-pencil text-xl"></i>
+                            </a>
+                            <form asp-action="EliminarPlanta" asp-route-id="@planta.Id" method="post" class="inline" onsubmit="return confirm('¿Eliminar esta planta?')">
+                                <button type="submit" class="text-red-600 hover:text-red-800">
+                                    <i class="ph ph-trash text-xl"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</section>

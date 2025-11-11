@@ -1,0 +1,69 @@
+﻿@model ViveroApp.Dto.CrearUsuarioDto
+@{
+    ViewData["Title"] = "Crear Nuevo Usuario";
+}
+
+<section class="my-[3rem]">
+    <h2 class="text-4xl font-bold text-gray-800 mb-6">
+        <i class="ph ph-user-plus text-green-600"></i>
+        Crear Nuevo Usuario
+    </h2>
+
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 lg:p-8 max-w-2xl mx-auto">
+        <form asp-action="CrearUsuario" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-red-600 mb-4"></div>
+
+            <div class="mb-4">
+                <label asp-for="Nombre" class="block text-sm font-medium text-gray-700 mb-1">Nombre</label>
+                <input asp-for="Nombre" class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500" />
+                <span asp-validation-for="Nombre" class="text-red-600 text-sm"></span>
+            </div>
+
+            <div class="mb-4">
+                <label asp-for="Email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                <input asp-for="Email" class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500" />
+                <span asp-validation-for="Email" class="text-red-600 text-sm"></span>
+            </div>
+
+            <div class="mb-4">
+                <label asp-for="Password" class="block text-sm font-medium text-gray-700 mb-1">Contraseña</label>
+                <input asp-for="Password" type="password" class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500" />
+                <span asp-validation-for="Password" class="text-red-600 text-sm"></span>
+            </div>
+
+            <div class="mb-4">
+                <label asp-for="ConfirmarPassword" class="block text-sm font-medium text-gray-700 mb-1">Confirmar Contraseña</label>
+                <input asp-for="ConfirmarPassword" type="password" class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500" />
+                <span asp-validation-for="ConfirmarPassword" class="text-red-600 text-sm"></span>
+            </div>
+
+            <div class="grid grid-cols-2 gap-6">
+                <div class="mb-4">
+                    <label asp-for="Rol" class="block text-sm font-medium text-gray-700 mb-1">Rol</label>
+                    <select asp-for="Rol" class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500">
+                        <option value="usuario">Usuario</option>
+                        <option value="admin">Administrador</option>
+                    </select>
+                    <span asp-validation-for="Rol" class="text-red-600 text-sm"></span>
+                </div>
+
+                <div class="mb-4 flex items-center justify-start pt-6">
+                    <div class="flex items-center h-full">
+                        <input asp-for="Activo" type="checkbox" class="h-5 w-5 text-green-600 border-gray-300 rounded focus:ring-green-500" />
+                        <label asp-for="Activo" class="ml-2 block text-sm font-medium text-gray-900">Activo</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-8 flex justify-end gap-4">
+                <a asp-action="Usuarios" class="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">
+                    Cancelar
+                </a>
+                <button type="submit" class="bg-[#1E6241] hover:bg-[#195136] text-white px-6 py-2 rounded-lg inline-flex items-center gap-2">
+                    <i class="ph ph-plus-circle"></i>
+                    Crear Usuario
+                </button>
+            </div>
+        </form>
+    </div>
+</section>

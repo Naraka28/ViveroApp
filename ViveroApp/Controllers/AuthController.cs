@@ -13,7 +13,6 @@ namespace ViveroApp.Controllers
         {
             this.repositorioAutenticar = repositorioAutenticar;
         }
-        // GET: /Auth/Login
         [HttpGet]
         public IActionResult Login(string? returnUrl = null)
         {
@@ -21,7 +20,6 @@ namespace ViveroApp.Controllers
             return View();
         }
 
-        // POST: /Auth/Login
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginDto model, string? returnUrl = null)
@@ -76,7 +74,6 @@ namespace ViveroApp.Controllers
             return RedirectToAction(nameof(Login));
         }
 
-        // POST: /Auth/Logout
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
@@ -85,6 +82,8 @@ namespace ViveroApp.Controllers
             await repositorioAutenticar.Logout();
             TempData["Mensaje"] = "Sesión cerrada exitosamente";
             return RedirectToAction("Index", "Home");
-        }
+        } 
+
+        
     }
 }
