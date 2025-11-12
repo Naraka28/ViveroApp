@@ -7,19 +7,19 @@ namespace ViveroApp.Models
     {
         public int Id { get; set; }
         public string Nombre { get; set; }
-        public string NombreCientifico { get; set; }
+        public string Nombre_Cientifico { get; set; }
         public string Descripcion { get; set; }
-        public string ImagenUrl { get; set; }
-        public int RiegoId { get; set; }
-        public int LuzId { get; set; }
-        public int SustratoId { get; set; }
-        public string CuidadosEspeciales { get; set; }
-        public int? AlturaMaxCm { get; set; }
+        public string Imagen_Url { get; set; }
+        public int Riego_Id { get; set; }
+        public int Luz_Id { get; set; }
+        public int Sustrato_Id { get; set; }
+        public string Cuidados_Especiales { get; set; }
+        public int? Altura_Max_Cm { get; set; }
         public string Dificultad { get; set; }
         public bool Toxica { get; set; }
         public string Notas { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public DateTime UpdatedAt { get; set; }
+        public DateTime Created_At { get; set; }
+        public DateTime Updated_At { get; set; }
 
 
         public virtual Riego Riego { get; set; }
