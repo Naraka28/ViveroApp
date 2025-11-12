@@ -66,8 +66,8 @@
                                 <option value="">Seleccionar categoría...</option>
                                 @foreach (var cat in ViewBag.Categorias)
                                 {
-                                    <option value="@cat.Id" data-nombre="@cat.Nombre" data-icono="@cat.Icono">
-                                        @cat.Icono @cat.Nombre
+                                    <option value="@cat.Id" data-nombre="@cat.Nombre">
+                                       @cat.Nombre
                                     </option>
                                 }
                             </select>
@@ -186,7 +186,6 @@
             const selectedOption = this.options[this.selectedIndex];
             const categoriaId = selectedOption.value;
             const categoriaNombre = selectedOption.dataset.nombre;
-            const categoriaIcono = selectedOption.dataset.icono || '';
 
             if (categoriaId && !categoriasSeleccionadas.has(categoriaId)) {
                 categoriasSeleccionadas.add(categoriaId);
@@ -195,7 +194,6 @@
                 badge.className = 'inline-flex items-center gap-1.5 px-3 py-1.5 bg-green-100 text-green-800 rounded-full text-sm font-medium';
                 badge.dataset.id = categoriaId;
                 badge.innerHTML = `
-                    <span>${categoriaIcono}</span>
                     <span>${categoriaNombre}</span>
                     <button type="button" class="ml-1 hover:text-green-900" onclick="eliminarCategoria('${categoriaId}')">
                         <i class="ph ph-x"></i>

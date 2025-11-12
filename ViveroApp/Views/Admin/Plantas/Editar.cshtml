@@ -96,14 +96,14 @@
                                 {
                                     if (categoriasSeleccionadas.Contains(cat.Id))
                                     {
-                                        <option value="@cat.Id" data-nombre="@cat.Nombre" data-icono="@cat.Icono" disabled>
-                                            @Html.Raw(cat.Icono) @cat.Nombre
+                                        <option value="@cat.Id" data-nombre="@cat.Nombre" disabled>
+                                            @cat.Nombre
                                         </option>
                                     }
                                     else
                                     {
-                                        <option value="@cat.Id" data-nombre="@cat.Nombre" data-icono="@cat.Icono">
-                                            @Html.Raw(cat.Icono) @cat.Nombre
+                                        <option value="@cat.Id" data-nombre="@cat.Nombre">
+                                            @cat.Nombre
                                         </option>
                                     }
                                 }
@@ -117,7 +117,6 @@
                                 if (categoriasSeleccionadas.Contains(cat.Id))
                                 {
                                     <div class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-100 text-blue-800 rounded-full text-sm font-medium" data-id="@cat.Id">
-                                        <span>@cat.Icono</span>
                                         <span>@cat.Nombre</span>
                                         <button type="button" class="ml-1 hover:text-blue-900" onclick="eliminarCategoria('@cat.Id')">
                                             <i class="ph ph-x"></i>
@@ -255,7 +254,6 @@
             const selectedOption = this.options[this.selectedIndex];
             const categoriaId = selectedOption.value;
             const categoriaNombre = selectedOption.dataset.nombre;
-            const categoriaIcono = selectedOption.dataset.icono || '';
 
             if (categoriaId && !categoriasSeleccionadas.has(categoriaId)) {
                 categoriasSeleccionadas.add(categoriaId);
@@ -264,7 +262,6 @@
                 badge.className = 'inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-100 text-blue-800 rounded-full text-sm font-medium';
                 badge.dataset.id = categoriaId;
                 badge.innerHTML = `
-                    <span>${categoriaIcono}</span>
                     <span>${categoriaNombre}</span>
                     <button type="button" class="ml-1 hover:text-blue-900" onclick="eliminarCategoria('${categoriaId}')">
                         <i class="ph ph-x"></i>
