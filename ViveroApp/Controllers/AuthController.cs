@@ -82,8 +82,42 @@ namespace ViveroApp.Controllers
             await repositorioAutenticar.Logout();
             TempData["Mensaje"] = "Sesión cerrada exitosamente";
             return RedirectToAction("Index", "Home");
-        } 
+        }
+        //[HttpGet]
+        //[Authorize]
+        //public IActionResult CambiarContrasena()
+        //{
+        //    return View();
+        //}
 
-        
+        //// POST: /Auth/CambiarContrasena
+        //[HttpPost]
+        //[Authorize]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> CambiarContrasena(CambiarContrasenaDto model)
+        //{
+        //    if (!ModelState.IsValid)
+        //        return View(model);
+
+        //    var usuario = await repositorioAutenticar.ObtenerUsuario();
+
+        //    if (usuario == null)
+        //        return RedirectToAction(nameof(Login));
+
+        //    var success = await repositorioAutenticar.CambiarContrasena(
+        //        usuario.Id,
+        //        model.CurrentPassword,
+        //        model.NewPassword
+        //    );
+
+        //    if (!success)
+        //    {
+        //        ModelState.AddModelError(string.Empty, "La contraseña actual es incorrecta");
+        //        return View(model);
+        //    }
+
+        //    TempData["Mensaje"] = "Contraseña cambiada exitosamente";
+        //    return RedirectToAction("Perfil", "Usuario");
+        //}
     }
 }

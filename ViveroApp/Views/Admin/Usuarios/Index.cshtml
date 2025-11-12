@@ -65,12 +65,6 @@
                         <td class="px-6 py-4 text-gray-600">@usuario.FechaRegistro.ToString("dd/MM/yyyy")</td>
                         <td class="px-6 py-4 text-right space-x-2">
 
-                            <form asp-action="CambiarRolUsuario" asp-route-id="@usuario.Id" method="post" class="inline">
-                                <input type="hidden" name="nuevoRol" value="@(usuario.Rol == "admin" ? "usuario" : "admin")" />
-                                <button type="submit" class="p-1 @(usuario.Rol == "admin" ? "text-gray-500 hover:text-gray-800" : "text-purple-600 hover:text-purple-800")" title="@(usuario.Rol == "admin" ? "Quitar Admin" : "Hacer Admin")">
-                                    <i class="ph ph-@(usuario.Rol == "admin" ? "arrow-down" : "shield-star") text-xl"></i>
-                                </button>
-                            </form>
 
                             <a asp-action="EditarUsuario" asp-route-id="@usuario.Id" class="text-blue-600 hover:text-blue-800" title="Editar">
                                 <i class="ph ph-pencil text-xl"></i>

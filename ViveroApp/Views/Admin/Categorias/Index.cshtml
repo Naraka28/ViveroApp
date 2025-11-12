@@ -1,0 +1,110 @@
+﻿@model IEnumerable<ViveroApp.Dto.CategoriaDto>
+@{
+    ViewData["Title"] = "Gestionar Categorías";
+}
+
+<section class="my-[3rem]">
+    <div class="flex justify-between items-center mb-6">
+        <div>
+            <h2 class="text-4xl font-bold text-gray-800">Gestionar Categorías</h2>
+            <p class="text-xl text-gray-600 mt-2">@Model.Count() categorías registradas</p>
+        </div>
+        <a asp-action="CrearCategoria" class="bg-[#1E6241] hover:bg-[#195136] text-white px-6 py-3 rounded-xl inline-flex items-center gap-2 transition-colors">
+            <i class="ph ph-plus-circle"></i>
+            <span>Nueva Categoría</span>
+        </a>
+    </div>
+
+    @if (TempData["Mensaje"] != null)
+    {
+        <div class="bg-green-50 border-l-4 border-green-500 text-green-800 px-6 py-4 rounded-r-xl mb-6 flex items-center gap-3">
+            <i class="ph ph-check-circle text-2xl"></i>
+            <span>@TempData["Mensaje"]</span>
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="bg-red-50 border-l-4 border-red-500 text-red-800 px-6 py-4 rounded-r-xl mb-6 flex items-center gap-3">
+            <i class="ph ph-warning-circle text-2xl"></i>
+            <span>@TempData["Error"]</span>
+        </div>
+    }
+
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+        <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+                <tr>
+                    <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">Imagen</th>
+                    <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">Nombre</th>
+                    <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">Descripción</th>
+                    <th class="px-6 py-4 text-right text-sm font-semibold text-gray-700">Acciones</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200">
+                @foreach (var cat in Model)
+                {
+                    <tr class="hover:bg-gray-50 transition-colors">
+                        <td class="px-6 py-4">
+                            @if (!string.IsNullOrEmpty(cat.Icono))
+                            {
+                                <img src="@cat.Icono" alt="@cat.Nombre" class="w-16 h-16 object-cover rounded-lg border border-gray-200">
+                            }
+                            else
+                            {
+                                <div class="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center border border-gray-200">
+                                    <i class="ph ph-image text-gray-400 text-2xl"></i>
+                                </div>
+                            }
+                        </td>
+                        <td class="px-6 py-4 font-medium text-gray-900">@cat.Nombre</td>
+                        <td class="px-6 py-4 text-gray-600">
+                            @if (!string.IsNullOrEmpty(cat.Descripcion))
+                            {
+                                if (cat.Descripcion.Length > 80)
+                                {
+                                    <span title="@cat.Descripcion">@cat.Descripcion.Substring(0, 80)...</span>
+                                }
+                                else
+                                {
+                                    @cat.Descripcion
+                                }
+                            }
+                            else
+                            {
+                                <span class="text-gray-400 italic">Sin descripción</span>
+                            }
+                        </td>
+                        <td class="px-6 py-4 text-right space-x-2">
+                            <a asp-action="EditarCategoria" asp-route-id="@cat.Id"
+                               class="text-blue-600 hover:text-blue-800 transition-colors inline-flex items-center gap-1"
+                               title="Editar categoría">
+                                <i class="ph ph-pencil text-xl"></i>
+                            </a>
+                            <form asp-action="EliminarCategoria" asp-route-id="@cat.Id" method="post" class="inline"
+                                  onsubmit="return confirm('¿Estás seguro de eliminar la categoría \'@cat.Nombre\'? Esta acción no se puede deshacer.')">
+                                <button type="submit"
+                                        class="text-red-600 hover:text-red-800 transition-colors inline-flex items-center gap-1"
+                                        title="Eliminar categoría">
+                                    <i class="ph ph-trash text-xl"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        @if (!Model.Any())
+        {
+            <div class="text-center py-12">
+                <i class="ph ph-folder-open text-6xl text-gray-300 mb-4"></i>
+                <p class="text-gray-500 text-lg">No hay categorías registradas</p>
+                <a asp-action="CrearCategoria" class="mt-4 inline-flex items-center gap-2 text-green-600 hover:text-green-700 font-medium">
+                    <i class="ph ph-plus-circle"></i>
+                    Crear la primera categoría
+                </a>
+            </div>
+        }
+    </div>
+</section>

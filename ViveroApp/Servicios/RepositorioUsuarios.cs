@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Data.SqlClient;
 using System;
 using System.Data;
@@ -11,6 +12,8 @@ public interface IRepositorioUsuarios
     Task<(bool Success, int? UsuarioId)> Crear(Usuario usuario);
     Task ActualizarUltimoAcceso(int usuarioId);
     Task ActualizarPassword(int usuarioId, string password);
+    Task ActualizarPerfil(int usuarioId, string nombre, string email);
+    Task DesactivarCuenta(int usuarioId);
 }
 public class RepositorioUsuarios : IRepositorioUsuarios
 {
@@ -25,9 +28,21 @@ public class RepositorioUsuarios : IRepositorioUsuarios
         using var connection = new SqlConnection(connectionString);
 
         var usuario = await connection.QueryFirstOrDefaultAsync<Usuario>(
-            "SELECT * FROM usuario WHERE id = @Id",
-            new { Id = id }
-        );
+     @"SELECT 
+        id,
+        nombre,
+        email,
+        password,
+        fecha_registro AS FechaRegistro,
+        ultimo_acceso AS UltimoAcceso,
+        activo,
+        created_at AS CreatedAt,
+        updated_at AS UpdatedAt,
+        rol
+     FROM usuario
+     WHERE id = @Id",
+     new { Id = id }
+ );
 
         return usuario;
     }
@@ -69,9 +84,45 @@ public class RepositorioUsuarios : IRepositorioUsuarios
         );
     }
 
-    public Task ActualizarPassword(int usuarioId, string password)
+    public async Task ActualizarPassword(int usuarioId, string password)
     {
-        throw new NotImplementedException();
+        using var connection = new SqlConnection(connectionString);
+
+        await connection.ExecuteAsync(
+            "UPDATE usuario SET password = @PasswordHash, updated_at = @UpdatedAt WHERE id = @Id",
+            new { Id = usuarioId, PasswordHash = password, UpdatedAt = DateTime.Now }
+        );
+    }
+    public async Task ActualizarPerfil(int usuarioId, string nombre, string email)
+    {
+        using var connection = new SqlConnection(connectionString);
+
+        // Verificar que el email no esté en uso por otro usuario
+        var emailEnUso = await connection.QueryFirstOrDefaultAsync<int?>(
+            "SELECT id FROM usuario WHERE email = @Email AND id != @UsuarioId",
+            new { Email = email, UsuarioId = usuarioId }
+        );
+
+        if (emailEnUso.HasValue)
+            throw new Exception("El email ya está en uso por otro usuario");
+
+        await connection.ExecuteAsync(
+            @"UPDATE usuario 
+                  SET nombre = @Nombre, 
+                      email = @Email, 
+                      updated_at = GETDATE() 
+                  WHERE id = @UsuarioId",
+            new { UsuarioId = usuarioId, Nombre = nombre, Email = email }
+        );
+    }
+    public async Task DesactivarCuenta(int usuarioId)
+    {
+        using var connection = new SqlConnection(connectionString);
+
+        await connection.ExecuteAsync(
+            "UPDATE usuario SET activo = 0, updated_at = GETDATE() WHERE id = @UsuarioId",
+            new { UsuarioId = usuarioId }
+        );
     }
 }
 
