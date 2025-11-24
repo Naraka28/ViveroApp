@@ -8,6 +8,30 @@
 
     <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
 
+    @if (User.Identity?.IsAuthenticated == true)
+    {
+        <div class="absolute bottom-6 right-6 z-20">
+            @if (Model.EstaEnMiJardin)
+            {
+                <div class="inline-flex items-center gap-2 px-6 py-3 bg-gray-600 text-white rounded-xl cursor-not-allowed opacity-75">
+                    <i class="ph ph-check-circle"></i>
+                    <span>Ya está en tu jardín</span>
+                </div>
+            }
+            else
+            {
+                <form asp-controller="MiJardin" asp-action="Agregar" method="post" class="inline">
+                    <input type="hidden" name="plantaId" value="@Model.Id" />
+                    <button type="submit"
+                            class="inline-flex items-center gap-2 px-6 py-3 bg-[#1E6241] hover:bg-[#195136] text-white rounded-xl transition-colors">
+                        <i class="ph ph-plus-circle"></i>
+                        <span>Agregar a Mi Jardín</span>
+                    </button>
+                </form>
+            }
+        </div>
+    }
+
     <div class="relative z-10 text-white px-8 pb-12 max-w-7xl mx-auto w-full">
         <h1 class="text-5xl font-bold mb-2">@Model.Nombre</h1>
         @if (!string.IsNullOrEmpty(Model.Nombre_Cientifico))
@@ -197,18 +221,6 @@
                 <i class="ph ph-arrow-left"></i>
                 <span>Volver al listado</span>
             </a>
-        }
-
-        @if (User.Identity?.IsAuthenticated == true)
-        {
-            <form asp-controller="MiJardin" asp-action="Agregar" method="post" class="inline">
-                <input type="hidden" name="plantaId" value="@Model.Id" />
-                <button type="submit"
-                        class="inline-flex items-center gap-2 px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-xl transition-colors">
-                    <i class="ph ph-plus-circle"></i>
-                    <span>Agregar a Mi Jardín</span>
-                </button>
-            </form>
         }
     </div>
 </div>

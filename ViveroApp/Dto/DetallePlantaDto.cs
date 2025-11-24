@@ -45,5 +45,7 @@
         public int? HorasMax => Horas_Max;
         public string UbicacionRecomendada => Ubicacion_Recomendada ?? "";
         public string PhRango => Ph_Rango ?? "";
+
+        public bool EstaEnMiJardin { get; set; }
     }
 }
