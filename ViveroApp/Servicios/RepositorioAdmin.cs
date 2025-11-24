@@ -58,8 +58,29 @@ namespace ViveroApp.Servicios
                 PlantasEnJardines = await connection.ExecuteScalarAsync<int>("SELECT COUNT(DISTINCT planta_id) FROM mi_jardin")
             };
 
+            string sqlDificultad = @"SELECT dificultad as Etiqueta, COUNT(*) as Valor 
+                                    FROM planta 
+                                        GROUP BY dificultad";
+            stats.PlantasPorDificultad = (await connection.QueryAsync<DatoGrafico>(sqlDificultad)).ToList();
+
+
+            string sqlUsuarios = @"SELECT FORMAT(fecha_registro, 'MM-yyyy') as Etiqueta, COUNT(*) as Valor 
+                                   FROM usuario 
+                                   WHERE fecha_registro >= DATEADD(MONTH, -6, GETDATE())
+                                   GROUP BY FORMAT(fecha_registro, 'MM-yyyy'), YEAR(fecha_registro), MONTH(fecha_registro)
+                                   ORDER BY YEAR(fecha_registro), MONTH(fecha_registro)";
+            stats.UsuariosUltimos6Meses = (await connection.QueryAsync<DatoGrafico>(sqlUsuarios)).ToList();
+
+            string sqlCategorias = @"SELECT TOP 5 c.nombre as Etiqueta, COUNT(pc.planta_id) as Valor
+                                    FROM categoria c
+                                    LEFT JOIN planta_categoria pc ON c.id = pc.categoria_id
+                                    GROUP BY c.id, c.nombre
+                                    ORDER BY Valor DESC";
+            stats.TopCategorias = (await connection.QueryAsync<DatoGrafico>(sqlCategorias)).ToList();
+
             return stats;
         }
+
 
         public async Task<IEnumerable<DetallePlantaDto>> ObtenerTodasPlantas()
         {
@@ -209,7 +230,7 @@ namespace ViveroApp.Servicios
             string passwordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password);
 
             await connection.ExecuteAsync(@"
-        INSERT INTO usuario (Nombre, Email, Password, Rol, Activo, FechaRegistro, CreatedAt, UpdatedAt)
+        INSERT INTO usuario (nombre, email, password, rol, activo, fecha_registro, created_at, updated_at)
         VALUES (@Nombre, @Email, @PasswordHash, @Rol, @Activo, GETDATE(), GETDATE(), GETDATE())",
             new
             {
@@ -226,11 +247,11 @@ namespace ViveroApp.Servicios
             using var connection = new SqlConnection(connectionString);
             await connection.ExecuteAsync(@"
         UPDATE usuario SET 
-            Nombre = @Nombre, 
-            Email = @Email, 
-            Rol = @Rol, 
-            Activo = @Activo,
-            UpdatedAt = GETDATE()
+            nombre = @Nombre, 
+            email = @Email, 
+            rol = @Rol, 
+            activo = @Activo,
+            updated_at = GETDATE()
         WHERE id = @Id", new
             {
                 Id = id,

@@ -11,8 +11,9 @@
         Gestiona tu sistema de plantas
     </p>
 
+    <!-- Tarjetas de Estadísticas -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <div class="bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl p-6 border border-green-100">
+        <div class="bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl p-6 border border-green-100 hover:shadow-lg transition-shadow">
             <div class="flex items-center justify-between mb-4">
                 <div class="w-12 h-12 bg-green-500 rounded-xl flex items-center justify-center">
                     <i class="ph ph-plant text-white text-2xl"></i>
@@ -21,7 +22,8 @@
             </div>
             <h3 class="text-lg font-semibold text-gray-700">Total Plantas</h3>
         </div>
-        <div class="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl p-6 border border-blue-100">
+
+        <div class="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl p-6 border border-blue-100 hover:shadow-lg transition-shadow">
             <div class="flex items-center justify-between mb-4">
                 <div class="w-12 h-12 bg-blue-500 rounded-xl flex items-center justify-center">
                     <i class="ph ph-users text-white text-2xl"></i>
@@ -30,7 +32,8 @@
             </div>
             <h3 class="text-lg font-semibold text-gray-700">Usuarios</h3>
         </div>
-        <div class="bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl p-6 border border-purple-100">
+
+        <div class="bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl p-6 border border-purple-100 hover:shadow-lg transition-shadow">
             <div class="flex items-center justify-between mb-4">
                 <div class="w-12 h-12 bg-purple-500 rounded-xl flex items-center justify-center">
                     <i class="ph ph-tag text-white text-2xl"></i>
@@ -39,7 +42,8 @@
             </div>
             <h3 class="text-lg font-semibold text-gray-700">Categorías</h3>
         </div>
-        <div class="bg-gradient-to-br from-yellow-50 to-orange-50 rounded-2xl p-6 border border-yellow-100">
+
+        <div class="bg-gradient-to-br from-yellow-50 to-orange-50 rounded-2xl p-6 border border-yellow-100 hover:shadow-lg transition-shadow">
             <div class="flex items-center justify-between mb-4">
                 <div class="w-12 h-12 bg-yellow-500 rounded-xl flex items-center justify-center">
                     <i class="ph ph-flower text-white text-2xl"></i>
@@ -50,37 +54,116 @@
         </div>
     </div>
 
-    <h3 class="text-2xl font-bold text-gray-800 mb-4">Accesos Rápidos</h3>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        <a asp-action="Plantas" class="bg-white rounded-xl p-6 border border-gray-200 hover:shadow-lg transition-shadow">
-            <i class="ph ph-plant text-4xl text-green-600 mb-3"></i>
-            <h4 class="text-lg font-semibold mb-2">Gestionar Plantas</h4>
-            <p class="text-gray-600 text-sm">Crear, editar y eliminar plantas</p>
-        </a>
-        <a asp-action="Categorias" class="bg-white rounded-xl p-6 border border-gray-200 hover:shadow-lg transition-shadow">
-            <i class="ph ph-tag text-4xl text-purple-600 mb-3"></i>
-            <h4 class="text-lg font-semibold mb-2">Categorías</h4>
-            <p class="text-gray-600 text-sm">Administrar categorías de plantas</p>
-        </a>
-        <a asp-action="Usuarios" class="bg-white rounded-xl p-6 border border-gray-200 hover:shadow-lg transition-shadow">
-            <i class="ph ph-users text-4xl text-blue-600 mb-3"></i>
-            <h4 class="text-lg font-semibold mb-2">Usuarios</h4>
-            <p class="text-gray-600 text-sm">Gestionar usuarios y roles</p>
-        </a>
-        <a asp-action="Riegos" class="bg-white rounded-xl p-6 border border-gray-200 hover:shadow-lg transition-shadow">
-            <i class="ph ph-drop text-4xl text-cyan-600 mb-3"></i>
-            <h4 class="text-lg font-semibold mb-2">Tipos de Riego</h4>
-            <p class="text-gray-600 text-sm">Gestionar tipos de riego</p>
-        </a>
-        <a asp-action="Luces" class="bg-white rounded-xl p-6 border border-gray-200 hover:shadow-lg transition-shadow">
-            <i class="ph ph-sun text-4xl text-yellow-600 mb-3"></i>
-            <h4 class="text-lg font-semibold mb-2">Tipos de Luz</h4>
-            <p class="text-gray-600 text-sm">Gestionar requisitos de luz</p>
-        </a>
-        <a asp-action="Sustratos" class="bg-white rounded-xl p-6 border border-gray-200 hover:shadow-lg transition-shadow">
-            <i class="ph ph-tree text-4xl text-amber-600 mb-3"></i>
-            <h4 class="text-lg font-semibold mb-2">Tipos de Sustrato</h4>
-            <p class="text-gray-600 text-sm">Gestionar tipos de sustrato</p>
-        </a>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+
+        <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 col-span-1 lg:col-span-2">
+            <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                <i class="ph ph-trend-up text-blue-600"></i>
+                Crecimiento de Usuarios (Últimos 6 Meses)
+            </h3>
+            <div class="h-[300px]">
+                <canvas id="chartUsuarios"></canvas>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+            <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                <i class="ph ph-chart-pie-slice text-green-600"></i>
+                Inventario por Dificultad
+            </h3>
+            <div class="h-[250px]">
+                <canvas id="chartDificultad"></canvas>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+            <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                <i class="ph ph-list-numbers text-purple-600"></i>
+                Top 5 Categorías con más Plantas
+            </h3>
+            <div class="h-[250px]">
+                <canvas id="chartCategorias"></canvas>
+            </div>
+        </div>
+
     </div>
-</section>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+    <script>
+        const dataDificultad = @Html.Raw(Json.Serialize(Model.PlantasPorDificultad));
+        const dataUsuarios = @Html.Raw(Json.Serialize(Model.UsuariosUltimos6Meses));
+        const dataCategorias = @Html.Raw(Json.Serialize(Model.TopCategorias));
+
+        const colors = {
+            green: '#22c55e', blue: '#3b82f6', purple: '#a855f7', yellow: '#eab308', red: '#ef4444',
+            teal: '#14b8a6', orange: '#f97316'
+        };
+
+        new Chart(document.getElementById('chartUsuarios'), {
+            type: 'line',
+            data: {
+                labels: dataUsuarios.map(d => d.etiqueta),
+                datasets: [{
+                    label: 'Nuevos Registros',
+                    data: dataUsuarios.map(d => d.valor),
+                    borderColor: colors.blue,
+                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 5,
+                    pointHoverRadius: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { beginAtZero: true, ticks: { precision: 0 } }
+                }
+            }
+        });
+
+        new Chart(document.getElementById('chartDificultad'), {
+            type: 'doughnut',
+            data: {
+                labels: dataDificultad.map(d => d.etiqueta),
+                datasets: [{
+                    data: dataDificultad.map(d => d.valor),
+                    backgroundColor: [colors.red, colors.green, colors.yellow],
+                    borderWidth: 2,
+                    borderColor: '#ffffff'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'right' }
+                }
+            }
+        });
+
+        new Chart(document.getElementById('chartCategorias'), {
+            type: 'bar',
+            data: {
+                labels: dataCategorias.map(d => d.etiqueta),
+                datasets: [{
+                    label: 'Cantidad de Plantas',
+                    data: dataCategorias.map(d => d.valor),
+                    backgroundColor: [colors.purple, colors.teal, colors.orange, colors.blue, colors.green],
+                    borderRadius: 5
+                }]
+            },
+            options: {
+                indexAxis: 'y', 
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { beginAtZero: true, ticks: { precision: 0 } }
+                }
+            }
+        });
+    </script>

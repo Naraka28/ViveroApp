@@ -15,12 +15,22 @@ namespace ViveroApp.Dto
         public string? LuzTipo { get; set; }
         public string? SustratoTipo { get; set; }
     }
+
+    public class DatoGrafico
+    {
+        public string Etiqueta { get; set; }
+        public int Valor { get; set; }
+    }
     public class EstadisticasDto
     {
         public int TotalPlantas { get; set; }
         public int TotalUsuarios { get; set; }
         public int TotalCategorias { get; set; }
         public int PlantasEnJardines { get; set; }
+
+        public List<DatoGrafico> PlantasPorDificultad { get; set; }
+        public List<DatoGrafico> UsuariosUltimos6Meses { get; set; }
+        public List<DatoGrafico> TopCategorias { get; set; }
     }
 
     public class CrearPlantaDto
