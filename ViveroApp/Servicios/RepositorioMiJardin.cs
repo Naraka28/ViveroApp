@@ -13,7 +13,9 @@ namespace ViveroApp.Servicios
         Task<bool> EliminarPlanta(int miJardinId, int usuarioId);
         Task<bool> ActualizarPlanta(int miJardinId, int usuarioId, string? ubicacion, string? apodo);
         Task<bool> RegistrarRiego(int miJardinId, int usuarioId);
-        Task Ordenar(string ids, int usuarioId);
+        Task Ordenar(string ids, int usuarioId); 
+        Task<bool> PlantaEstaEnJardin(int usuarioId, int plantaId);
+
     }
     public class RepositorioMiJardin : IRepositorioMiJardin
     {
@@ -136,6 +138,15 @@ namespace ViveroApp.Servicios
                 new { ids = ids, usuario_id = usuarioId },
                 commandType: CommandType.StoredProcedure
             );
+        }
+
+        public async Task<bool> PlantaEstaEnJardin(int usuarioId, int plantaId)
+        {
+            using var connection = new SqlConnection(connectionString);
+
+            var query = @"SELECT COUNT(1) FROM Mi_Jardin WHERE Usuario_Id = @UsuarioId AND Planta_Id = @PlantaId";
+            var count = await connection.ExecuteScalarAsync<int>(query, new { UsuarioId = usuarioId, PlantaId = plantaId });
+            return count > 0;
         }
     }
 }
