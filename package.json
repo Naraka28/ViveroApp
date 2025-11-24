@@ -5,5 +5,8 @@
   },
   "scripts": {
     "tailwind": "npx tailwindcss -i ViveroApp/wwwroot/css/site.css -o ViveroApp/wwwroot/css/styles.css --watch"
-}
+  },
+  "devDependencies": {
+    "cypress": "^15.6.0"
+  }
 }
