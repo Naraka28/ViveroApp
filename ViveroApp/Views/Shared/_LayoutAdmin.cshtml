@@ -41,28 +41,48 @@
                         <i class="ph ph-house"></i>
                         <span>Ver Sitio</span>
                     </a>
-
-                    <div class="relative">
-                        <button id="user-menu-button" class="flex items-center gap-2 px-4 py-2 bg-[#E9F0EC] text-[#1E6241] rounded-lg hover:bg-[#BCD0C6] transition-colors font-medium">
-                            <i class="ph ph-user-circle text-xl"></i>
-                            <span>@User.Identity.Name</span>
-                            <i class="ph ph-caret-down text-sm"></i>
-                        </button>
-
-                        <div id="user-dropdown" class="hidden absolute right-0 mt-2 w-56 bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden">
-                            <a asp-controller="Account" asp-action="Profile"
-                               class="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-gray-50 transition-colors">
-                                <i class="ph ph-user text-lg"></i>
-                                <span>Mi Perfil</span>
-                            </a>
-                            <hr class="border-gray-200">
-                            <form asp-controller="Auth" asp-action="Logout" method="post" class="m-0">
-                                <button type="submit" class="flex items-center gap-3 w-full px-4 py-3 text-red-600 hover:bg-red-50 transition-colors">
-                                    <i class="ph ph-sign-out text-lg"></i>
-                                    <span>Cerrar Sesión</span>
+                    <div class="hidden md:flex items-center gap-3">
+                        @if (User.Identity?.IsAuthenticated == true)
+                        {
+                            <div class="relative">
+                                <button id="user-menu-button" class="flex items-center gap-2 px-4 py-2 bg-[#E9F0EC] text-[#1E6241] rounded-lg hover:bg-[#BCD0C6] transition-colors font-medium">
+                                    <i class="ph ph-user-circle text-xl"></i>
+                                    <span>@User.Identity.Name</span>
+                                    <i class="ph ph-caret-down text-sm"></i>
                                 </button>
-                            </form>
-                        </div>
+
+                                <div id="user-dropdown" class="hidden absolute right-0 mt-2 w-56 bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden z-50">
+                                    <a asp-controller="Usuario" asp-action="Perfil"
+                                       class="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-gray-50 transition-colors">
+                                        <i class="ph ph-user text-lg"></i>
+                                        <span>Mi Perfil</span>
+                                    </a>
+                                    <a asp-controller="Usuario" asp-action="CambiarContrasena"
+                                       class="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-gray-50 transition-colors">
+                                        <i class="ph ph-lock text-lg"></i>
+                                        <span>Cambiar Contraseña</span>
+                                    </a>
+                                    <hr class="border-gray-200">
+                                    <form asp-controller="Auth" asp-action="Logout" method="post" class="m-0">
+                                        <button type="submit" class="flex items-center gap-3 w-full px-4 py-3 text-red-600 hover:bg-red-50 transition-colors">
+                                            <i class="ph ph-sign-out text-lg"></i>
+                                            <span>Cerrar Sesión</span>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <a asp-controller="Auth" asp-action="Login"
+                               class="px-4 py-2 text-gray-700 hover:text-[#1E6241] font-medium transition-colors">
+                                Iniciar Sesión
+                            </a>
+                            <a asp-controller="Auth" asp-action="Registrar"
+                               class="px-6 py-2 bg-[#1E6241] text-white rounded-lg hover:bg-[#195136] transition-colors font-medium shadow-sm">
+                                Registrarse
+                            </a>
+                        }
                     </div>
                 </div>
             </div>
@@ -166,6 +186,22 @@
 
             localStorage.setItem('sidebarVisible', !isHidden);
         });
+
+        const userMenuButton = document.getElementById('user-menu-button');
+        const userDropdown = document.getElementById('user-dropdown');
+
+        if (userMenuButton && userDropdown) {
+            userMenuButton.addEventListener('click', function (e) {
+                e.stopPropagation();
+                userDropdown.classList.toggle('hidden');
+            });
+
+            document.addEventListener('click', function (e) {
+                if (!userMenuButton.contains(e.target) && !userDropdown.contains(e.target)) {
+                    userDropdown.classList.add('hidden');
+                }
+            });
+        }
     </script>
 
 
