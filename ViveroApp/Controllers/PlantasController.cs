@@ -70,7 +70,6 @@ namespace ViveroApp.Controllers
             var resultados = await repositorioPlantas.BuscarPlantas(q);
             return Json(new { success = true, data = resultados });
         }
-
         [HttpPost]
         public async Task<IActionResult> IdentificarPorImagen([FromBody] IdentificarPlantaRequest request)
         {
@@ -81,32 +80,41 @@ namespace ViveroApp.Controllers
 
             try
             {
-                // Remover el prefijo data:image si existe
-                var imagenBase64 = request.ImagenBase64;
-                if (imagenBase64.Contains(","))
-                {
-                    imagenBase64 = imagenBase64.Split(',')[1];
-                }
-
                 var resultado = await plantIdService.IdentificarPlanta(
-                    imagenBase64,
+                    request.ImagenBase64,
                     request.Latitude,
                     request.Longitude
                 );
 
-                if (resultado == null || !resultado.Result.Is_plant)
+                // Mostrar resultados incluso si hay errores parciales
+                if (resultado == null)
                 {
                     return Json(new
                     {
                         success = false,
-                        message = "No se pudo identificar una planta en la imagen"
+                        message = "No se pudo conectar con el servicio de identificación."
                     });
                 }
 
+                // Si hay sugerencias, mostrarlas
+                var tieneSugerencias = resultado.Result?.Classification?.Suggestions?.Count > 0;
+
+                if (!tieneSugerencias)
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = "No se encontraron coincidencias para esta imagen."
+                    });
+                }
+
+                // SIEMPRE devolver éxito si hay sugerencias, independientemente de IsPlantBinary
                 return Json(new { success = true, data = resultado });
+
             }
             catch (Exception ex)
             {
+                Console.WriteLine($"❌ Error en controlador: {ex.Message}");
                 return Json(new
                 {
                     success = false,
@@ -114,12 +122,12 @@ namespace ViveroApp.Controllers
                 });
             }
         }
-    }
 
-    public class IdentificarPlantaRequest
-    {
-        public string ImagenBase64 { get; set; } = string.Empty;
-        public double? Latitude { get; set; }
-        public double? Longitude { get; set; }
+        public class IdentificarPlantaRequest
+        {
+            public string ImagenBase64 { get; set; } = string.Empty;
+            public double? Latitude { get; set; }
+            public double? Longitude { get; set; }
+        }
     }
 }

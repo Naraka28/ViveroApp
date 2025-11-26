@@ -139,21 +139,28 @@ async function identificarPlanta(imagenBase64) {
             },
             body: JSON.stringify({
                 imagenBase64: imagenBase64,
-                latitude: 29.0729, // Hermosillo
+                latitude: 29.0729,
                 longitude: -110.9559
             })
         });
 
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
         const result = await response.json();
+
+        console.log('Respuesta completa del servidor:', result); // Debug completo
 
         if (result.success && result.data) {
             mostrarResultadoIdentificacion(result.data);
         } else {
+            // Mostrar el mensaje específico del servidor
             mostrarErrorModal(result.message || 'No se pudo identificar la planta');
         }
     } catch (error) {
         console.error('Error al identificar planta:', error);
-        mostrarErrorModal('Error al conectar con el servicio de identificación');
+        mostrarErrorModal(`Error de conexión: ${error.message}`);
     }
 }
 
@@ -168,28 +175,66 @@ function mostrarCargando() {
 }
 
 function mostrarResultadoIdentificacion(data) {
-    const suggestions = data.result.classification.suggestions;
+    console.log('Datos recibidos:', data); // Debug
+
+    const suggestions = data.result?.classification?.suggestions;
 
     if (!suggestions || suggestions.length === 0) {
-        mostrarErrorModal('No se encontraron coincidencias');
+        mostrarErrorModal('No se encontraron coincidencias para esta imagen');
         return;
     }
 
     const topSuggestion = suggestions[0];
     const probability = (topSuggestion.probability * 100).toFixed(1);
 
-    const commonNames = topSuggestion.details.common_names?.join(', ') || 'N/A';
-    const synonyms = topSuggestion.details.synonyms?.slice(0, 3).join(', ') || 'N/A';
-    const watering = topSuggestion.details.watering;
-    const wateringInfo = watering ? `${watering.min} - ${watering.max}` : 'N/A';
-    const imagen = topSuggestion.similar_images?.[0] || '';
+    // CORREGIDO: Usar snake_case para las propiedades de la API
+    const commonNames = topSuggestion.details?.common_names?.length > 0
+        ? topSuggestion.details.common_names.join(', ')
+        : 'No disponible';
+
+    const synonyms = topSuggestion.details?.synonyms?.length > 0
+        ? topSuggestion.details.synonyms.slice(0, 3).join(', ')
+        : 'No disponible';
+
+    const similarImages = topSuggestion.similar_images || [];
+
+    // Manejar información de riego
+    const watering = topSuggestion.details?.watering;
+    let wateringInfo = 'No disponible';
+
+    if (watering) {
+        const minValue = watering.min !== undefined && watering.min !== null
+            ? watering.min.toString()
+            : '';
+        const maxValue = watering.max !== undefined && watering.max !== null
+            ? watering.max.toString()
+            : '';
+
+        if (minValue && maxValue && minValue !== maxValue) {
+            wateringInfo = `${minValue} - ${maxValue}`;
+        } else if (minValue) {
+            wateringInfo = minValue;
+        } else if (maxValue) {
+            wateringInfo = maxValue;
+        } else if (minValue && maxValue && minValue === maxValue) {
+            wateringInfo = minValue; // Si min y max son iguales, mostrar solo uno
+        }
+    }
+
+    // Manejar imágenes similares - usar snake_case
+    let imagen = '';
+    if (similarImages.length > 0) {
+        const firstImage = similarImages[0];
+        imagen = firstImage.url_small || firstImage.url || '';
+    }
 
     contenidoModal.innerHTML = `
         <div class="space-y-6">
             ${imagen ? `
                 <img src="${imagen}" 
                      alt="${topSuggestion.name}" 
-                     class="w-full h-64 object-cover rounded-2xl">
+                     class="w-full h-64 object-cover rounded-2xl"
+                     onerror="this.style.display='none'">
             ` : ''}
             
             <div>
