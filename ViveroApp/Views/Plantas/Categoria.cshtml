@@ -1,0 +1,86 @@
+﻿@using ViveroApp.Dto;
+@model PlantasPorCategoriaDto
+
+@{
+    ViewData["Title"] = Model.CategoriaNombre;
+}
+
+<section class="my-[3rem]">
+    <h2 class="text-4xl font-bold text-gray-800 mb-4">
+        @Model.CategoriaNombre
+    </h2>
+    <p class="text-xl text-gray-600 mb-8 max-w-2xl">
+        @Model.CategoriaDescripcion
+    </p>
+</section>
+
+<section class="my-[3rem]">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        @foreach (var planta in Model.Plantas)
+        {
+            <a href="@Url.Action("DetallePlanta", "Plantas", new { id = planta.Id })"
+               class="plant-card relative h-96 bg-cover bg-center bg-no-repeat overflow-hidden cursor-pointer group transition-all duration-300 rounded-2xl"
+               style="background-image: url('@planta.ImagenUrl');">
+
+                <div class="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-500 group-hover:scale-110"
+                     style="background-image: url('@planta.ImagenUrl');"></div>
+
+                <div class="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors duration-300"></div>
+
+                <div class="absolute bottom-0 left-0 right-0 p-6 text-white z-10 transform transition-transform duration-300 group-hover:-translate-y-2">
+                    <h3 class="text-2xl font-bold leading-tight mb-1">
+                        @planta.Nombre
+                    </h3>
+                    <p class="text-lg font-light opacity-90 mb-4">
+                        @planta.NombreCientifico
+                    </p>
+
+                    <div class="flex flex-wrap gap-2 mb-3">
+                        <span class="inline-flex items-center gap-1 px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-sm">
+                            <i class="ph ph-chart-bar"></i>
+                            <span>@planta.Dificultad</span>
+                        </span>
+                        <span class="inline-flex items-center gap-1 px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-sm">
+                            <i class="ph ph-drop"></i>
+                            <span>@planta.TipoRiego</span>
+                        </span>
+                        <span class="inline-flex items-center gap-1 px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-sm">
+                            <i class="ph ph-sun"></i>
+                            <span>@planta.TipoLuz</span>
+                        </span>
+                    </div>
+
+                    <div class="flex items-center gap-2 text-sm opacity-90">
+                        <i class="ph ph-users text-lg"></i>
+                        <span><strong>@planta.UsuariosQueLaTienen</strong> usuarios tienen esta planta</span>
+                    </div>
+                </div>
+
+                <div class="absolute top-4 right-4 w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <i class="ph ph-arrow-right text-white text-xl"></i>
+                </div>
+            </a>
+        }
+    </div>
+</section>
+
+<section class="bg-[#E9F0EC] rounded-3xl py-16 px-8 my-[4rem]">
+    <div class="max-w-4xl mx-auto text-center">
+        <div class="inline-flex items-center justify-center w-16 h-16 bg-[#BCD0C6] rounded-full text-[#1E6241] mb-6">
+            <i class="ph ph-plant text-3xl"></i>
+        </div>
+
+        <h2 class="text-4xl font-bold text-gray-800 mb-4">
+            ¿Buscas más variedades?
+        </h2>
+
+        <p class="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+            Explora nuestro catálogo completo y encuentra las plantas perfectas para tu espacio
+        </p>
+
+        <a asp-controller="Plantas" asp-action="Index"
+           class="bg-[#1E6241] hover:bg-[#195136] text-white px-8 py-3 rounded-xl text-lg inline-block transition-colors">
+            Ver Todas las Plantas
+        </a>
+    </div>
+</section>

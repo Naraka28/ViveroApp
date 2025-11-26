@@ -35,7 +35,7 @@ p, button {
     color: #1E6241;
 }
 
-.category button {
+.category a {
     font-family: 'Geist';
     font-weight: 500;
     display: inline-flex;
@@ -51,7 +51,7 @@ p, button {
     cursor: pointer;
 }
 
-.category button:hover {
+.category a:hover {
     background-color: #E9F0EC;
     border-color: #195136;
 }

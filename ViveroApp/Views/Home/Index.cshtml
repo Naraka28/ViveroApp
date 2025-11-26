@@ -1,4 +1,7 @@
-﻿@{
+﻿@model HomeViewModel
+@using ViveroApp.Dto
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
@@ -53,61 +56,143 @@
         Encuentra tu planta ideal
     </p>
     <div class="category flex flex-wrap gap-6">
-        <button class="w-40">
+        <a asp-controller="Plantas" asp-action="Categoria" asp-route-nombre="Árboles" class="w-40">
             <i class="ph ph-tree"></i>
-            Árboles
-        </button>
-        <button class="w-40">
+            <span>Árboles</span>
+        </a>
+        <a asp-controller="Plantas" asp-action="Categoria" asp-route-nombre="Aromáticas" class="w-40">
             <i class="ph ph-wind"></i>
-            Aromáticas
-        </button>
-        <button class="w-40">
+            <span>Aromáticas</span>
+        </a>
+        <a asp-controller="Plantas" asp-action="Categoria" asp-route-nombre="Flores" class="w-40">
             <i class="ph ph-flower-tulip"></i>
-            Flores
-        </button>
-        <button class="w-40">
+            <span>Flores</span>
+        </a>
+        <a asp-controller="Plantas" asp-action="Categoria" asp-route-nombre="Frutales" class="w-40">
             <i class="ph ph-orange"></i>
-            Frutales
-        </button>
-        <button class="w-40">
+            <span>Frutales</span>
+        </a>
+        <a asp-controller="Plantas" asp-action="Categoria" asp-route-nombre="Hortalizas" class="w-40">
             <i class="ph ph-grains"></i>
-            Hortalizas
-        </button>
-        <button class="w-40">
+            <span>Hortalizas</span>
+        </a>
+        <a asp-controller="Plantas" asp-action="Categoria" asp-route-nombre="Interior" class="w-40">
             <i class="ph ph-house-line"></i>
-            Interior
-        </button>
-        <button class="w-40">
+            <span>Interior</span>
+        </a>
+        <a asp-controller="Plantas" asp-action="Categoria" asp-route-nombre="Trepadoras" class="w-40">
             <i class="ph ph-leaf"></i>
-            Trepadoras
-        </button>
-        <button class="w-40">
+            <span>Trepadoras</span>
+        </a>
+        <a asp-controller="Plantas" asp-action="Categoria" asp-route-nombre="Suculentas" class="w-40">
             <i class="ph ph-cactus"></i>
-            Suculentas
-        </button>
+            <span>Suculentas</span>
+        </a>
     </div>
 </section>
 
 <!-- Mi Jardín -->
-<section class="bg-[#E9F0EC] rounded-3xl py-16 px-8 my-[4rem]">
-    <div class="max-w-4xl mx-auto text-center">
-        <div class="inline-flex items-center justify-center w-16 h-16 bg-[#BCD0C6] rounded-full text-[#1E6241] mb-6">
-            <i class="ph ph-plant text-3xl"></i>
+@if (!User.Identity.IsAuthenticated)
+{
+    <!-- Usuario NO autenticado: mostrar CTA para registrarse -->
+    <section class="bg-[#E9F0EC] rounded-3xl py-16 px-8 my-[4rem]">
+        <div class="max-w-4xl mx-auto text-center">
+            <div class="inline-flex items-center justify-center w-16 h-16 bg-[#BCD0C6] rounded-full text-[#1E6241] mb-6">
+                <i class="ph ph-plant text-3xl"></i>
+            </div>
+            <h2 class="text-4xl font-bold text-gray-800 mb-4">
+                Mi Jardín
+            </h2>
+            <p class="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+                Organiza tus plantas y mantén tu colección siempre al día
+            </p>
+            <a asp-controller="Auth" asp-action="Login"
+               class="inline-block bg-[#1E6241] hover:bg-[#195136] text-white px-8 py-3 rounded-xl text-lg transition-colors">
+                Empezar
+            </a>
         </div>
+    </section>
+}
+else
+{
+    @if (!Model.MiJardin.Any())
+    {
+        <!-- Usuario autenticado pero jardín vacío -->
+        <section class="bg-[#E9F0EC] rounded-3xl py-16 px-8 my-[4rem]">
+            <div class="max-w-4xl mx-auto text-center">
+                <div class="inline-flex items-center justify-center w-16 h-16 bg-[#BCD0C6] rounded-full text-[#1E6241] mb-6">
+                    <i class="ph ph-plant text-3xl"></i>
+                </div>
+                <h2 class="text-4xl font-bold text-gray-800 mb-4">
+                    Tu jardín está vacío
+                </h2>
+                <p class="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+                    Comienza agregando tus primeras plantas desde el catálogo
+                </p>
+                <a asp-controller="Plantas" asp-action="Index"
+                   class="inline-block bg-[#1E6241] hover:bg-[#195136] text-white px-8 py-3 rounded-xl text-lg transition-colors">
+                    Explorar Plantas
+                </a>
+            </div>
+        </section>
+    }
+    else
+    {
+        <!-- Usuario autenticado con plantas -->
+        <section class="my-[4rem]">
+            <div class="flex justify-between items-center mb-6">
+                <div>
+                    <h2 class="text-4xl font-bold text-gray-800">Mi Jardín</h2>
+                    <p class="text-xl text-gray-600 mt-2">Tus plantas favoritas</p>
+                </div>
+                <a asp-controller="MiJardin" asp-action="Index"
+                   class="bg-[#E9F0EC] text-[#1E6241] hover:bg-[#BCD0C6] px-6 py-3 rounded-xl text-lg inline-flex items-center gap-2 transition-colors font-medium">
+                    <span>Ver todas</span>
+                    <i class="ph ph-arrow-right"></i>
+                </a>
+            </div>
 
-        <h2 class="text-4xl font-bold text-gray-800 mb-4">
-            Mi Jardín
-        </h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                @foreach (var planta in Model.MiJardin.Take(3))
+                {
+                    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow">
+                        @if (!string.IsNullOrEmpty(planta.PlantaImagenUrl))
+                        {
+                            <div class="relative h-48 bg-cover bg-center" style="background-image: url('@planta.PlantaImagenUrl');">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
+                                @if (planta.NecesitaRiego)
+                                {
+                                    <div class="absolute top-3 right-3 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-semibold flex items-center gap-1">
+                                        <i class="ph ph-drop"></i>
+                                        <span>¡Necesita riego!</span>
+                                    </div>
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="h-48 bg-gray-100 flex items-center justify-center">
+                                <i class="ph ph-flower text-6xl text-gray-300"></i>
+                            </div>
+                        }
 
-        <p class="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-            Organiza tus plantas y mantén tu colección siempre al día
-        </p>
+                        <div class="p-6">
+                            <h5 class="text-xl font-bold text-gray-800 mb-2">
+                                @if (!string.IsNullOrEmpty(planta.Apodo))
+                                {
+                                    <span>@planta.Apodo</span>
+                                    <span class="block text-sm font-normal text-gray-500">@planta.PlantaNombre</span>
+                                }
+                                else
+                                {
+                                    @planta.PlantaNombre
+                                }
+                            </h5>
 
-        <button class="bg-[#1E6241] hover:bg-[#195136] text-white px-8 py-3 rounded-xl text-lg">
-            Empezar
-        </button>
-    </div>
-</section>
+                            @if (!string.IsNullOrEmpty(planta.PlantaNombreCientifico))
+                            {
+                                <p class="text-sm italic text-gray-500 mb-3">@planta.PlantaNombreCientifico</p>
+                            }
 
 <!-- Favoritas -->
 <section class="my-[4rem]">
@@ -135,16 +220,77 @@
                 <h3 class="text-2xl leading-tight">Cempasúchil</h3>
                 <p class="text-lg font-light opacity-90">Tageter Erecta</p>
             </div>
-        </div>
+                            @if (!string.IsNullOrEmpty(planta.Ubicacion))
+                            {
+                                <div class="flex items-center gap-2 text-sm text-gray-600 mb-4">
+                                    <i class="ph ph-map-pin text-lg text-red-500"></i>
+                                    <span>@planta.Ubicacion</span>
+                                </div>
+                            }
 
-        <div class="plant-card relative bg-cover bg-center bg-no-repeat overflow-hidden cursor-pointer group transition-all duration-300" style="background-image: url('/images/orchid.jpg');">
-            <div class="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-500 group-hover:scale-110" style="background-image: url('/images/orchid.jpg');"></div>
-            <div class="absolute inset-0 bg-black/30 group-hover:bg-black/50 transition-colors duration-300"></div>
-            <div class="absolute bottom-0 left-0 right-0 p-6 text-white z-10 transform transition-transform duration-300 group-hover:-translate-y-2">
-                <h3 class="text-2xl leading-tight">Orquídea</h3>
-                <p class="text-lg font-light opacity-90">Orchidaceae</p>
+                            @if (planta.UltimoRiego.HasValue)
+                            {
+                                <div class="flex items-center gap-2 text-sm mb-4">
+                                    <i class="ph ph-drop text-lg @(planta.NecesitaRiego ? "text-red-500" : "text-green-500")"></i>
+                                    <span class="text-gray-600">Último riego: @planta.UltimoRiego.Value.ToString("dd/MM/yyyy")</span>
+                                </div>
+                            }
+
+                            <a asp-controller="Plantas"
+                               asp-action="DetallePlanta"
+                               asp-route-id="@planta.PlantaId"
+                               class="block w-full text-center px-4 py-2 border border-[#1E6241] text-[#1E6241] hover:bg-[#E9F0EC] rounded-lg text-sm font-medium transition-colors">
+                                Ver detalles
+                            </a>
+                        </div>
+                    </div>
+                }
             </div>
+        </section>
+    }
+}
+
+
+<!-- Populares -->
+<section class="my-[4rem]">
+    <div class="flex justify-between items-center mb-6">
+        <div>
+            <h2 class="text-4xl font-bold text-gray-800">Las Más Populares</h2>
+            <p class="text-xl text-gray-600 mt-2">Plantas populares perfectas para empezar tu jardín</p>
         </div>
+        <a asp-controller="Plantas" asp-action="PlantasPopulares"
+           class="bg-[#E9F0EC] text-[#1E6241] hover:bg-[#BCD0C6] px-6 py-3 rounded-xl text-lg inline-flex items-center gap-2 transition-colors font-medium">
+            <span>Ver todas</span>
+            <i class="ph ph-arrow-right"></i>
+        </a>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        @foreach (var planta in Model.PlantasPopulares)
+        {
+            <a href="@Url.Action("DetallePlanta", "Plantas", new { id = planta.Id })"
+               class="plant-card relative h-96 bg-cover bg-center bg-no-repeat overflow-hidden cursor-pointer group transition-all duration-300 rounded-2xl"
+               style="background-image: url('@planta.ImagenUrl');">
+
+                <div class="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-500 group-hover:scale-110"
+                     style="background-image: url('@planta.ImagenUrl');"></div>
+
+                <div class="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors duration-300"></div>
+
+                <div class="absolute bottom-0 left-0 right-0 p-6 text-white z-10 transform transition-transform duration-300 group-hover:-translate-y-2">
+                    <h3 class="text-2xl font-bold leading-tight mb-1">
+                        @planta.Nombre
+                    </h3>
+                    <p class="text-lg font-light opacity-90">
+                        @planta.NombreCientifico
+                    </p>
+                </div>
+
+                <div class="absolute top-4 right-4 w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <i class="ph ph-arrow-right text-white text-xl"></i>
+                </div>
+            </a>
+        }
     </div>
 </section>
 
@@ -157,7 +303,7 @@
         Plantas ideales según tu experiencia y ambiente
     </p>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <a href="#" class="rec-card cursor-pointer hover:shadow-md transition-shadow duration-300">
+        <a asp-controller="Plantas" asp-action="Recomendacion" asp-route-tipo="Principiantes" class="rec-card cursor-pointer hover:shadow-md transition-shadow duration-300">
             <div class="inline-flex items-center justify-center w-14 h-14 bg-[#DCFCE7] rounded-full text-[#1AA54D] mb-6">
                 <i class="ph ph-baby text-2xl"></i>
             </div>
@@ -171,7 +317,7 @@
             </div>
         </a>
 
-        <a href="#" class="rec-card cursor-pointer hover:shadow-md transition-shadow duration-300">
+        <a asp-controller="Plantas" asp-action="Recomendacion" asp-route-tipo="PocaLuz" class="rec-card cursor-pointer hover:shadow-md transition-shadow duration-300">
             <div class="inline-flex items-center justify-center w-14 h-14 bg-[#FEF3C7] rounded-full text-[#D97706] mb-6">
                 <i class="ph ph-sun-dim text-2xl"></i>
             </div>
@@ -185,7 +331,7 @@
             </div>
         </a>
 
-        <a href="#" class="rec-card cursor-pointer hover:shadow-md transition-shadow duration-300">
+        <a asp-controller="Plantas" asp-action="Recomendacion" asp-route-tipo="BajoRiego" class="rec-card cursor-pointer hover:shadow-md transition-shadow duration-300">
             <div class="inline-flex items-center justify-center w-14 h-14 bg-[#DBEAFE] rounded-full text-[#2866EB] mb-6">
                 <i class="ph ph-drop text-2xl"></i>
             </div>

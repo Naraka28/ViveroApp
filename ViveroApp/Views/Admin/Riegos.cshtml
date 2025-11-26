@@ -1,0 +1,86 @@
+﻿@model IEnumerable<ViveroApp.Models.Riego>
+@{
+    ViewData["Title"] = "Gestionar Riegos";
+}
+
+<section class="my-[3rem]">
+    <div class="flex justify-between items-center mb-6">
+        <div>
+            <h2 class="text-4xl font-bold text-gray-800">Gestionar Riegos</h2>
+            <p class="text-xl text-gray-600 mt-2">@Model.Count() tipos de riego registrados</p>
+        </div>
+        <a asp-action="CrearRiego" class="bg-[#1E6241] hover:bg-[#195136] text-white px-6 py-3 rounded-xl inline-flex items-center gap-2">
+            <i class="ph ph-plus-circle"></i>
+            <span>Nuevo Riego</span>
+        </a>
+    </div>
+
+    @if (TempData["Mensaje"] != null)
+    {
+        <div class="bg-green-50 border-l-4 border-green-500 text-green-800 px-6 py-4 rounded-r-xl mb-6">
+            @TempData["Mensaje"]
+        </div>
+    }
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        @foreach (var riego in Model)
+        {
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
+                <div class="flex items-start justify-between mb-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                            <i class="ph ph-drop text-blue-600 text-2xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold text-gray-900">@riego.Nombre</h3>
+                            @if (!string.IsNullOrEmpty(riego.Nivel))
+                            {
+                                <span class="text-sm px-2 py-1 rounded-full bg-blue-100 text-blue-800">@riego.Nivel</span>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <p class="text-gray-600 text-sm mb-4">@riego.Descripcion</p>
+
+                <div class="space-y-2 mb-4">
+                    @if (riego.FrecuenciaDiasVerano.HasValue)
+                    {
+                        <div class="flex items-center gap-2 text-sm">
+                            <i class="ph ph-sun text-orange-500"></i>
+                            <span class="text-gray-600">Verano: cada @riego.FrecuenciaDiasVerano días</span>
+                        </div>
+                    }
+                    @if (riego.FrecuenciaDiasInvierno.HasValue)
+                    {
+                        <div class="flex items-center gap-2 text-sm">
+                            <i class="ph ph-snowflake text-blue-500"></i>
+                            <span class="text-gray-600">Invierno: cada @riego.FrecuenciaDiasInvierno días</span>
+                        </div>
+                    }
+                </div>
+
+                @if (!string.IsNullOrEmpty(riego.Recomendaciones))
+                {
+                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4">
+                        <p class="text-xs text-blue-800">
+                            <i class="ph ph-info mr-1"></i>
+                            @riego.Recomendaciones
+                        </p>
+                    </div>
+                }
+
+                <div class="flex justify-end gap-2 pt-4 border-t border-gray-200">
+                    <a asp-action="EditarRiego" asp-route-id="@riego.Id" class="text-blue-600 hover:text-blue-800 px-3 py-2">
+                        <i class="ph ph-pencil text-xl"></i>
+                    </a>
+                    <form asp-action="EliminarRiego" asp-route-id="@riego.Id" method="post" class="inline" onsubmit="return confirm('¿Eliminar este tipo de riego?')">
+                        <button type="submit" class="text-red-600 hover:text-red-800 px-3 py-2">
+                            <i class="ph ph-trash text-xl"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        }
+    </div>
+</section>

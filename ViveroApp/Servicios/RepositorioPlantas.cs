@@ -12,6 +12,8 @@ namespace ViveroApp.Servicios
         Task<IEnumerable<PlantaPopularDto>> ObtenerPlantasPopulares(int top = 10);
         Task<DetallePlantaDto> ObtenerDetalle(int id);
         Task<IEnumerable<BusquedaPlantaDto>> BuscarPlantas(string termino);
+        Task<PlantasPorCategoriaDto> ObtenerPlantasPorCategoria(string categoria);
+        Task<IEnumerable<PlantaPopularDto>> ObtenerPlantasPorRecomendacion(string tipo);
     }
 
     public class RepositorioPlantas : IRepositorioPlantas
@@ -85,6 +87,64 @@ namespace ViveroApp.Servicios
                 Termino = $"%{termino}%",
                 TerminoExacto = $"{termino}%"
             });
+        public async Task<PlantasPorCategoriaDto> ObtenerPlantasPorCategoria(string categoria)
+        {
+            using var connection = new SqlConnection(connectionString);
+
+            // Obtener descripción de la categoría
+            var categoriaInfo = await connection.QueryFirstOrDefaultAsync<dynamic>(
+                "SELECT Nombre, Descripcion FROM categoria WHERE Nombre = @categoria",
+                new { categoria }
+            );
+
+            if (categoriaInfo == null)
+            {
+                return null;
+            }
+
+            // Obtener plantitas
+            var plantas = await connection.QueryAsync<PlantaPopularDto>(
+                "sp_plantas_por_categoria",
+                new { categoria },
+                commandType: CommandType.StoredProcedure
+            );
+
+            return new PlantasPorCategoriaDto
+            {
+                CategoriaNombre = categoriaInfo.Nombre,
+                CategoriaDescripcion = categoriaInfo.Descripcion ?? "Descubre nuestra colección",
+                Plantas = plantas
+            };
+        }
+        public async Task<IEnumerable<PlantaPopularDto>> ObtenerPlantasPorRecomendacion(string tipo)
+        {
+            using var connection = new SqlConnection(connectionString);
+
+            string whereClause = tipo switch
+            {
+                "Principiantes" => "WHERE p.dificultad = 'baja'",
+                "PocaLuz" => "WHERE l.tipo IN ('Sol Parcial', 'Sombra Parcial', 'Sombra')",
+                "BajoRiego" => "WHERE r.nombre IN ('Riego Escaso', 'Riego Suculentas')",
+                _ => string.Empty
+            };
+
+            string query = $@"
+            SELECT p.id as Id, p.nombre, p.nombre_cientifico as NombreCientifico, 
+            p.imagen_url as ImagenUrl, p.dificultad,
+            COUNT(mj.id) as UsuariosQueLaTienen,    
+            r.nombre as TipoRiego, l.tipo as TipoLuz 
+            FROM planta p
+            LEFT JOIN riego r ON p.riego_id = r.id
+            LEFT JOIN luz l ON p.luz_id = l.id              
+            LEFT JOIN mi_Jardin mj ON p.id = mj.planta_id       
+            {whereClause}
+     
+            GROUP BY p.id, p.nombre, p.nombre_cientifico, p.imagen_url, 
+              p.dificultad, r.nombre, l.tipo             
+            ORDER BY p.nombre";
+
+            var plantas = await connection.QueryAsync<PlantaPopularDto>(query);
+            return plantas;
         }
     }
 }
