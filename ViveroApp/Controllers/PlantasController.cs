@@ -30,6 +30,7 @@ namespace ViveroApp.Controllers
         public async Task<IActionResult> Index()
         {
             var plantas = await repositorioPlantas.ObtenerTodasLasPlantas();
+
             return View(plantas);
         }
 
@@ -67,6 +68,32 @@ namespace ViveroApp.Controllers
             }
 
             return View(resultado);
+        }
+
+        public async Task<IActionResult> Recomendacion(string tipo)
+        {
+            var plantas = await repositorioPlantas.ObtenerPlantasPorRecomendacion(tipo);
+
+            var titulo = tipo switch
+            {
+                "Principiantes" => "Plantas para Principiantes",
+                "PocaLuz" => "Plantas de Poca Luz",
+                "BajoRiego" => "Plantas de Bajo Riego",
+                _ => "Recomendaciones"
+            };
+
+            var descripcion = tipo switch
+            {
+                "Principiantes" => "Plantas resistentes y de bajo mantenimiento perfectas para empezar",
+                "PocaLuz" => "Ideales para espacios interiores con luz indirecta",
+                "BajoRiego" => "Perfectas si viajas seguido o prefieres regar poco",
+                _ => "Plantas recomendadas para ti"
+            };
+
+            ViewBag.Titulo = titulo;
+            ViewBag.Descripcion = descripcion;
+
+            return View("Recomendacion", plantas);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿@model IEnumerable<ViveroApp.DTOs.MiJardinDto>
+﻿@model HomeViewModel
+@using ViveroApp.Dto
 
 @{
     ViewData["Title"] = "Home Page";
@@ -96,7 +97,7 @@
 }
 else
 {
-    @if (!Model.Any())
+    @if (!Model.MiJardin.Any())
     {
         <!-- Usuario autenticado pero jardín vacío -->
         <section class="bg-[#E9F0EC] rounded-3xl py-16 px-8 my-[4rem]">
@@ -134,7 +135,7 @@ else
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                @foreach (var planta in Model.Take(3))
+                @foreach (var planta in Model.MiJardin.Take(3))
                 {
                     <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow">
                         @if (!string.IsNullOrEmpty(planta.PlantaImagenUrl))
@@ -205,64 +206,41 @@ else
     }
 }
 
-<!-- Favoritas -->
+
+<!-- Populares -->
 <section class="my-[4rem]">
     <h2 class="text-4xl font-bold text-gray-800 mb-4">
-        Las Favoritas
+        Las Más Populares
     </h2>
     <p class="text-xl text-gray-600 mb-8 max-w-2xl">
         Plantas populares perfectas para empezar tu jardín
     </p>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        
-        <div class="plant-card relative bg-cover bg-center bg-no-repeat overflow-hidden cursor-pointer group transition-all duration-300" style="background-image: url('/images/aloe.jpg');">
+        @foreach (var planta in Model.PlantasPopulares)
+        {
+            <a href="@Url.Action("DetallePlanta", "Plantas", new { id = planta.Id })"
+               class="plant-card relative h-96 bg-cover bg-center bg-no-repeat overflow-hidden cursor-pointer group transition-all duration-300 rounded-2xl"
+               style="background-image: url('@planta.ImagenUrl');">
 
-            <div class="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-500 group-hover:scale-110" style="background-image: url('/images/aloe.jpg');"></div>
+                <div class="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-500 group-hover:scale-110"
+                     style="background-image: url('@planta.ImagenUrl');"></div>
 
-            <div class="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors duration-300"></div>
+                <div class="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors duration-300"></div>
 
-            <div class="absolute bottom-0 left-0 right-0 p-6 text-white z-10 transform transition-transform duration-300 group-hover:-translate-y-2">
-                <h3 class="text-2xl leading-tight">
-                    Sábila
-                </h3>
-                <p class="text-lg font-light opacity-90">
-                    Aloe Vera
-                </p>
-            </div>
-        </div>
+                <div class="absolute bottom-0 left-0 right-0 p-6 text-white z-10 transform transition-transform duration-300 group-hover:-translate-y-2">
+                    <h3 class="text-2xl font-bold leading-tight mb-1">
+                        @planta.Nombre
+                    </h3>
+                    <p class="text-lg font-light opacity-90">
+                        @planta.NombreCientifico
+                    </p>
+                </div>
 
-        <div class="plant-card relative bg-cover bg-center bg-no-repeat overflow-hidden cursor-pointer group transition-all duration-300" style="background-image: url('/images/cempasuchil.jpg');">
-
-            <div class="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-500 group-hover:scale-110" style="background-image: url('/images/cempasuchil.jpg');"></div>
-
-            <div class="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors duration-300"></div>
-
-            <div class="absolute bottom-0 left-0 right-0 p-6 text-white z-10 transform transition-transform duration-300 group-hover:-translate-y-2">
-                <h3 class="text-2xl leading-tight">
-                    Cempasúchil
-                </h3>
-                <p class="text-lg font-light opacity-90">
-                    Tageter Erecta
-                </p>
-            </div>
-        </div>
-
-        <div class="plant-card relative bg-cover bg-center bg-no-repeat overflow-hidden cursor-pointer group transition-all duration-300" style="background-image: url('/images/orchid.jpg');">
-
-            <div class="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-500 group-hover:scale-110" style="background-image: url('/images/orchid.jpg');"></div>
-
-            <div class="absolute inset-0 bg-black/30 group-hover:bg-black/50 transition-colors duration-300"></div>
-
-            <div class="absolute bottom-0 left-0 right-0 p-6 text-white z-10 transform transition-transform duration-300 group-hover:-translate-y-2">
-                <h3 class="text-2xl leading-tight">
-                    Orquídea
-                </h3>
-                <p class="text-lg font-light opacity-90">
-                    Orchidaceae
-                </p>
-            </div>
-        </div>
-
+                <div class="absolute top-4 right-4 w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <i class="ph ph-arrow-right text-white text-xl"></i>
+                </div>
+            </a>
+        }
     </div>
 </section>
 
@@ -275,7 +253,7 @@ else
         Plantas ideales según tu experiencia y ambiente
     </p>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <a href="#" class="rec-card cursor-pointer hover:shadow-md transition-shadow duration-300">
+        <a asp-controller="Plantas" asp-action="Recomendacion" asp-route-tipo="Principiantes" class="rec-card cursor-pointer hover:shadow-md transition-shadow duration-300">
             <div class="inline-flex items-center justify-center w-14 h-14 bg-[#DCFCE7] rounded-full text-[#1AA54D] mb-6">
                 <i class="ph ph-baby text-2xl"></i>
             </div>
@@ -292,7 +270,7 @@ else
             </div>
         </a>
 
-        <a href="#" class="rec-card cursor-pointer hover:shadow-md transition-shadow duration-300">
+        <a asp-controller="Plantas" asp-action="Recomendacion" asp-route-tipo="PocaLuz" class="rec-card cursor-pointer hover:shadow-md transition-shadow duration-300">
             <div class="inline-flex items-center justify-center w-14 h-14 bg-[#FEF3C7] rounded-full text-[#D97706] mb-6">
                 <i class="ph ph-sun-dim text-2xl"></i>
             </div>
@@ -308,7 +286,7 @@ else
             </div>
         </a>
 
-        <a href="#" class="rec-card cursor-pointer hover:shadow-md transition-shadow duration-300">
+        <a asp-controller="Plantas" asp-action="Recomendacion" asp-route-tipo="BajoRiego" class="rec-card cursor-pointer hover:shadow-md transition-shadow duration-300">
             <div class="inline-flex items-center justify-center w-14 h-14 bg-[#DBEAFE] rounded-full text-[#2866EB] mb-6">
                 <i class="ph ph-drop text-2xl"></i>
             </div>
