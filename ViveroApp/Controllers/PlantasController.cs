@@ -56,5 +56,17 @@ namespace ViveroApp.Controllers
             var plantas = await repositorioPlantas.ObtenerPlantasPopulares();
             return View(plantas);
         }
+
+        public async Task<IActionResult> Categoria(string nombre)
+        {
+            var resultado = await repositorioPlantas.ObtenerPlantasPorCategoria(nombre);
+
+            if (resultado == null || !resultado.Plantas.Any())
+            {
+                return NotFound();
+            }
+
+            return View(resultado);
+        }
     }
 }
