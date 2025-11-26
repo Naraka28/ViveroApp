@@ -275,7 +275,7 @@ else
         Plantas ideales según tu experiencia y ambiente
     </p>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <a href="#" class="rec-card cursor-pointer hover:shadow-md transition-shadow duration-300">
+        <a asp-controller="Plantas" asp-action="Recomendacion" asp-route-tipo="Principiantes" class="rec-card cursor-pointer hover:shadow-md transition-shadow duration-300">
             <div class="inline-flex items-center justify-center w-14 h-14 bg-[#DCFCE7] rounded-full text-[#1AA54D] mb-6">
                 <i class="ph ph-baby text-2xl"></i>
             </div>
@@ -292,7 +292,7 @@ else
             </div>
         </a>
 
-        <a href="#" class="rec-card cursor-pointer hover:shadow-md transition-shadow duration-300">
+        <a asp-controller="Plantas" asp-action="Recomendacion" asp-route-tipo="PocaLuz" class="rec-card cursor-pointer hover:shadow-md transition-shadow duration-300">
             <div class="inline-flex items-center justify-center w-14 h-14 bg-[#FEF3C7] rounded-full text-[#D97706] mb-6">
                 <i class="ph ph-sun-dim text-2xl"></i>
             </div>
@@ -308,7 +308,7 @@ else
             </div>
         </a>
 
-        <a href="#" class="rec-card cursor-pointer hover:shadow-md transition-shadow duration-300">
+        <a asp-controller="Plantas" asp-action="Recomendacion" asp-route-tipo="BajoRiego" class="rec-card cursor-pointer hover:shadow-md transition-shadow duration-300">
             <div class="inline-flex items-center justify-center w-14 h-14 bg-[#DBEAFE] rounded-full text-[#2866EB] mb-6">
                 <i class="ph ph-drop text-2xl"></i>
             </div>
