@@ -6,6 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddHttpClient();
 
 builder.Services.AddSession();
 
@@ -28,6 +29,7 @@ builder.Services.AddScoped<IRepositorioAutenticar, RepositorioAutenticar>();
 builder.Services.AddScoped<IRepositorioMiJardin, RepositorioMiJardin>();
 builder.Services.AddScoped<IRepositorioAdmin, RepositorioAdmin>();
 builder.Services.AddScoped<IServicioArchivos, ServicioArchivos>();
+builder.Services.AddScoped<IPlantIdService, PlantIdService>();
 
 var app = builder.Build();
 

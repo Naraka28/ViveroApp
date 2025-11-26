@@ -16,13 +16,31 @@
         <p class="text-xl mb-8">
             Aprende, cuida y crece junto a tus plantas
         </p>
+
         <!-- Search -->
         <div class="flex gap-2 items-center bg-white rounded-full px-4 py-3 shadow-lg max-w-xl w-full mx-auto">
             <i class="ph ph-magnifying-glass text-gray-500 text-xl"></i>
             <input type="text"
+                   id="searchInput"
                    placeholder="Busca plantas por nombre, especie o cuidados..."
                    class="flex-1 bg-transparent outline-none text-gray-800 placeholder-gray-400" />
+
+            <!-- Botón de búsqueda por imagen -->
+            <button type="button"
+                    id="btnBuscarImagen"
+                    class="bg-[#1E6241] hover:bg-[#195136] text-white px-4 py-2 rounded-full flex items-center gap-2 transition-colors duration-300">
+                <i class="ph ph-camera text-xl"></i>
+            </button>
+
+            <!-- Input oculto para seleccionar archivo -->
+            <input type="file"
+                   id="fileInput"
+                   accept="image/*"
+                   class="hidden" />
         </div>
+
+        <!-- Resultados de búsqueda por texto -->
+        <div id="searchResults" class="hidden mt-4 bg-white rounded-2xl shadow-xl max-w-xl w-full mx-auto text-left max-h-96 overflow-y-auto"></div>
     </div>
 </section>
 
@@ -100,55 +118,33 @@
         Plantas populares perfectas para empezar tu jardín
     </p>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        
+
         <div class="plant-card relative bg-cover bg-center bg-no-repeat overflow-hidden cursor-pointer group transition-all duration-300" style="background-image: url('/images/aloe.jpg');">
-
             <div class="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-500 group-hover:scale-110" style="background-image: url('/images/aloe.jpg');"></div>
-
             <div class="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors duration-300"></div>
-
             <div class="absolute bottom-0 left-0 right-0 p-6 text-white z-10 transform transition-transform duration-300 group-hover:-translate-y-2">
-                <h3 class="text-2xl leading-tight">
-                    Sábila
-                </h3>
-                <p class="text-lg font-light opacity-90">
-                    Aloe Vera
-                </p>
+                <h3 class="text-2xl leading-tight">Sábila</h3>
+                <p class="text-lg font-light opacity-90">Aloe Vera</p>
             </div>
         </div>
 
         <div class="plant-card relative bg-cover bg-center bg-no-repeat overflow-hidden cursor-pointer group transition-all duration-300" style="background-image: url('/images/cempasuchil.jpg');">
-
             <div class="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-500 group-hover:scale-110" style="background-image: url('/images/cempasuchil.jpg');"></div>
-
             <div class="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors duration-300"></div>
-
             <div class="absolute bottom-0 left-0 right-0 p-6 text-white z-10 transform transition-transform duration-300 group-hover:-translate-y-2">
-                <h3 class="text-2xl leading-tight">
-                    Cempasúchil
-                </h3>
-                <p class="text-lg font-light opacity-90">
-                    Tageter Erecta
-                </p>
+                <h3 class="text-2xl leading-tight">Cempasúchil</h3>
+                <p class="text-lg font-light opacity-90">Tageter Erecta</p>
             </div>
         </div>
 
         <div class="plant-card relative bg-cover bg-center bg-no-repeat overflow-hidden cursor-pointer group transition-all duration-300" style="background-image: url('/images/orchid.jpg');">
-
             <div class="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-500 group-hover:scale-110" style="background-image: url('/images/orchid.jpg');"></div>
-
             <div class="absolute inset-0 bg-black/30 group-hover:bg-black/50 transition-colors duration-300"></div>
-
             <div class="absolute bottom-0 left-0 right-0 p-6 text-white z-10 transform transition-transform duration-300 group-hover:-translate-y-2">
-                <h3 class="text-2xl leading-tight">
-                    Orquídea
-                </h3>
-                <p class="text-lg font-light opacity-90">
-                    Orchidaceae
-                </p>
+                <h3 class="text-2xl leading-tight">Orquídea</h3>
+                <p class="text-lg font-light opacity-90">Orchidaceae</p>
             </div>
         </div>
-
     </div>
 </section>
 
@@ -165,10 +161,7 @@
             <div class="inline-flex items-center justify-center w-14 h-14 bg-[#DCFCE7] rounded-full text-[#1AA54D] mb-6">
                 <i class="ph ph-baby text-2xl"></i>
             </div>
-
-            <h3 class="text-2xl mb-4">
-                Principiantes
-            </h3>
+            <h3 class="text-2xl mb-4">Principiantes</h3>
             <p class="text-l text-gray-800 mb-4">
                 Plantas resistentes y de bajo mantenimiento perfectas para empezar
             </p>
@@ -182,9 +175,7 @@
             <div class="inline-flex items-center justify-center w-14 h-14 bg-[#FEF3C7] rounded-full text-[#D97706] mb-6">
                 <i class="ph ph-sun-dim text-2xl"></i>
             </div>
-            <h3 class="text-2xl mb-4">
-                Poca Luz
-            </h3>
+            <h3 class="text-2xl mb-4">Poca Luz</h3>
             <p class="text-l text-gray-800 mb-4">
                 Ideales para espacios interiores con luz indirecta
             </p>
@@ -198,9 +189,7 @@
             <div class="inline-flex items-center justify-center w-14 h-14 bg-[#DBEAFE] rounded-full text-[#2866EB] mb-6">
                 <i class="ph ph-drop text-2xl"></i>
             </div>
-            <h3 class="text-2xl mb-4">
-                Bajo Riego
-            </h3>
+            <h3 class="text-2xl mb-4">Bajo Riego</h3>
             <p class="text-l text-gray-800 mb-4">
                 Perfectas si viajas seguido o prefieres regar poco
             </p>
@@ -211,3 +200,22 @@
         </a>
     </div>
 </section>
+
+<!-- Modal para resultados de identificación por imagen -->
+<div id="modalIdentificacion" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
+        <div class="p-8">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-3xl font-bold text-gray-800">Resultado de Identificación</h2>
+                <button id="btnCerrarModal" class="text-gray-500 hover:text-gray-700 transition-colors">
+                    <i class="ph ph-x text-3xl"></i>
+                </button>
+            </div>
+            <div id="contenidoModal"></div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/busqueda-plantas.js"></script>
+}
