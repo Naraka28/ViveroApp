@@ -198,80 +198,76 @@ function mostrarResultadoIdentificacion(data) {
 
     const similarImages = topSuggestion.similar_images || [];
 
-    // Manejar información de riego
-    const watering = topSuggestion.details?.watering;
-    let wateringInfo = 'No disponible';
-
-    if (watering) {
-        const minValue = watering.min !== undefined && watering.min !== null
-            ? watering.min.toString()
-            : '';
-        const maxValue = watering.max !== undefined && watering.max !== null
-            ? watering.max.toString()
-            : '';
-
-        if (minValue && maxValue && minValue !== maxValue) {
-            wateringInfo = `${minValue} - ${maxValue}`;
-        } else if (minValue) {
-            wateringInfo = minValue;
-        } else if (maxValue) {
-            wateringInfo = maxValue;
-        } else if (minValue && maxValue && minValue === maxValue) {
-            wateringInfo = minValue; // Si min y max son iguales, mostrar solo uno
-        }
-    }
-
-    // Manejar imágenes similares - usar snake_case
+    // MEJORADO: Manejar imágenes similares - usar la imagen de mejor calidad
     let imagen = '';
+    let imagenUrl = '';
+
     if (similarImages.length > 0) {
         const firstImage = similarImages[0];
+        // Usar la URL normal (alta calidad) en lugar de url_small (baja calidad)
+        imagenUrl = firstImage.url || '';
+        // Para el src, usar url_small como placeholder y cargar la buena después
         imagen = firstImage.url_small || firstImage.url || '';
     }
 
     contenidoModal.innerHTML = `
         <div class="space-y-6">
-            ${imagen ? `
-                <img src="${imagen}" 
-                     alt="${topSuggestion.name}" 
-                     class="w-full h-64 object-cover rounded-2xl"
-                     onerror="this.style.display='none'">
-            ` : ''}
-            
-            <div>
-                <h3 class="text-2xl font-bold text-gray-800 mb-2">${topSuggestion.name}</h3>
-                <div class="flex items-center gap-2 mb-4">
-                    <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">
-                        ${probability}% de coincidencia
-                    </span>
+            <!-- NUEVO LAYOUT: Imagen a la izquierda, información a la derecha -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Columna de la imagen -->
+                <div class="lg:col-span-1">
+                    ${imagen ? `
+                        <div class="relative overflow-hidden">
+                            <img src="${imagen}" 
+                                 alt="${topSuggestion.name}" 
+                                 class="w-full h-64 lg:h-80 object-contain"
+                                 id="modalImagen"
+                                 onload="this.classList.remove('opacity-0')"
+                                 onerror="this.style.display='none'">
+                            <div class="absolute inset-0 flex items-center justify-center" id="imagenLoading">
+                                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-[#1E6241] opacity-50"></div>
+                            </div>
+                        </div>
+                    ` : `
+                        <div class="w-full h-64 lg:h-80 bg-gray-100 rounded-2xl flex items-center justify-center">
+                            <i class="ph ph-image text-gray-400 text-4xl"></i>
+                        </div>
+                    `}
                 </div>
-            </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div class="bg-gray-50 p-4 rounded-xl">
-                    <div class="flex items-center gap-2 mb-2">
-                        <i class="ph ph-plant text-[#1E6241] text-xl"></i>
-                        <h4 class="font-semibold text-gray-700">Nombres Comunes</h4>
+                <!-- Columna de la información -->
+                <div class="lg:col-span-2 space-y-4">
+                    <!-- Nombre y probabilidad -->
+                    <div>
+                        <h3 class="text-2xl font-bold text-gray-800 mb-2">${topSuggestion.name}</h3>
+                        <div class="flex items-center gap-2">
+                            <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">
+                                ${probability}% de coincidencia
+                            </span>
+                        </div>
                     </div>
-                    <p class="text-gray-600">${commonNames}</p>
-                </div>
 
-                <div class="bg-gray-50 p-4 rounded-xl">
-                    <div class="flex items-center gap-2 mb-2">
-                        <i class="ph ph-drop text-[#1E6241] text-xl"></i>
-                        <h4 class="font-semibold text-gray-700">Riego</h4>
+                    <!-- Nombres Comunes -->
+                    <div class="bg-gray-50 p-4 rounded-xl">
+                        <div class="flex items-center gap-2 mb-2">
+                            <i class="ph ph-plant text-[#1E6241] text-xl"></i>
+                            <h4 class="font-semibold text-gray-700">Nombres Comunes</h4>
+                        </div>
+                        <p class="text-gray-600">${commonNames}</p>
                     </div>
-                    <p class="text-gray-600">${wateringInfo}</p>
+
+                    <!-- Sinónimos -->
+                    <div class="bg-gray-50 p-4 rounded-xl">
+                        <div class="flex items-center gap-2 mb-2">
+                            <i class="ph ph-list text-[#1E6241] text-xl"></i>
+                            <h4 class="font-semibold text-gray-700">Sinónimos</h4>
+                        </div>
+                        <p class="text-gray-600">${synonyms}</p>
+                    </div>
                 </div>
             </div>
 
-            <div class="bg-gray-50 p-4 rounded-xl">
-                <div class="flex items-center gap-2 mb-2">
-                    <i class="ph ph-list text-[#1E6241] text-xl"></i>
-                    <h4 class="font-semibold text-gray-700">Sinónimos</h4>
-                </div>
-                <p class="text-gray-600">${synonyms}</p>
-            </div>
-
+            <!-- Otras coincidencias (debajo del layout principal) -->
             ${suggestions.length > 1 ? `
                 <div class="border-t pt-4">
                     <h4 class="font-semibold text-gray-700 mb-3">Otras posibles coincidencias:</h4>
@@ -286,12 +282,44 @@ function mostrarResultadoIdentificacion(data) {
                 </div>
             ` : ''}
 
+            <!-- Botón -->
             <button onclick="location.reload()" 
                     class="w-full bg-[#1E6241] hover:bg-[#195136] text-white px-6 py-3 rounded-xl transition-colors duration-300">
                 Buscar otra planta
             </button>
         </div>
     `;
+
+    // MEJORADO: Cargar la imagen de alta calidad después de mostrar el modal
+    if (imagenUrl && imagenUrl !== imagen) {
+        cargarImagenAltaCalidad(imagenUrl);
+    }
+}
+
+// Función para cargar imagen de alta calidad (se mantiene igual)
+function cargarImagenAltaCalidad(urlAltaCalidad) {
+    const img = new Image();
+    const modalImagen = document.getElementById('modalImagen');
+    const imagenLoading = document.getElementById('imagenLoading');
+
+    img.onload = function () {
+        if (modalImagen) {
+            modalImagen.src = urlAltaCalidad;
+            modalImagen.classList.remove('opacity-0');
+        }
+        if (imagenLoading) {
+            imagenLoading.style.display = 'none';
+        }
+    };
+
+    img.onerror = function () {
+        if (imagenLoading) {
+            imagenLoading.style.display = 'none';
+        }
+        // Mantener la imagen de baja calidad si la alta falla
+    };
+
+    img.src = urlAltaCalidad;
 }
 
 function mostrarErrorModal(mensaje) {
