@@ -14,8 +14,6 @@ namespace ViveroApp.Servicios
         Task<DetallePlantaDto> ObtenerDetalle(int id);
         Task<PlantasPorCategoriaDto> ObtenerPlantasPorCategoria(string categoria);
         Task<IEnumerable<PlantaPopularDto>> ObtenerPlantasPorRecomendacion(string tipo);
-
-
     }
 
     public class RepositorioPlantas : IRepositorioPlantas
@@ -113,7 +111,7 @@ namespace ViveroApp.Servicios
             FROM planta p
             LEFT JOIN riego r ON p.riego_id = r.id
             LEFT JOIN luz l ON p.luz_id = l.id              
-            LEFT JOIN Mi_Jardin mj ON p.id = mj.planta_id       
+            LEFT JOIN mi_Jardin mj ON p.id = mj.planta_id       
             {whereClause}
      
             GROUP BY p.id, p.nombre, p.nombre_cientifico, p.imagen_url, 

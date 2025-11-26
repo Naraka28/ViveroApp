@@ -30,6 +30,7 @@ namespace ViveroApp.Controllers
         public async Task<IActionResult> Index()
         {
             var plantas = await repositorioPlantas.ObtenerTodasLasPlantas();
+
             return View(plantas);
         }
 

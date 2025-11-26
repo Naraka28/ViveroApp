@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using Microsoft.Data.SqlClient;
 using System.Data;
+using ViveroApp.Dto;
 using ViveroApp.DTOs;
 
 
@@ -15,6 +16,7 @@ namespace ViveroApp.Servicios
         Task<bool> RegistrarRiego(int miJardinId, int usuarioId);
         Task Ordenar(string ids, int usuarioId); 
         Task<bool> PlantaEstaEnJardin(int usuarioId, int plantaId);
+        Task<IEnumerable<PlantaPopularDto>> ObtenerPlantasPopulares(int cantidad);
 
     }
     public class RepositorioMiJardin : IRepositorioMiJardin
@@ -147,6 +149,19 @@ namespace ViveroApp.Servicios
             var query = @"SELECT COUNT(1) FROM Mi_Jardin WHERE Usuario_Id = @UsuarioId AND Planta_Id = @PlantaId";
             var count = await connection.ExecuteScalarAsync<int>(query, new { UsuarioId = usuarioId, PlantaId = plantaId });
             return count > 0;
+        }
+
+        public async Task<IEnumerable<PlantaPopularDto>> ObtenerPlantasPopulares(int cantidad)
+        {
+            using var connection = new SqlConnection(connectionString);
+
+            var plantas = await connection.QueryAsync<PlantaPopularDto>(
+                "sp_plantas_populares",
+                new { top = cantidad },
+                commandType: CommandType.StoredProcedure
+            );
+
+            return plantas;
         }
     }
 }

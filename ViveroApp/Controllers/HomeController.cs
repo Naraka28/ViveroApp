@@ -33,7 +33,15 @@ public class HomeController : Controller
             }
         }
 
-        return View(plantasJardin);
+        var plantasPopulares = await _repositorioMiJardin.ObtenerPlantasPopulares(3);
+
+        var viewModel = new HomeViewModel
+        {
+            MiJardin = plantasJardin,
+            PlantasPopulares = plantasPopulares
+        };
+
+        return View(viewModel);
     }
 
     public IActionResult Privacy()
