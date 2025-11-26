@@ -1,0 +1,74 @@
+﻿@model ViveroApp.Models.Luz
+@{
+    ViewData["Title"] = "Crear Tipo de Luz";
+}
+
+<section class="my-[3rem]">
+    <h2 class="text-4xl font-bold text-gray-800 mb-6">
+        <i class="ph ph-plus-circle text-yellow-600"></i>
+        Crear Tipo de Luz
+    </h2>
+
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 lg:p-8">
+        <form asp-action="CrearLuz" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-red-600 mb-4"></div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="md:col-span-2">
+                    <label asp-for="Tipo" class="block text-sm font-medium text-gray-700 mb-1">Tipo de Luz</label>
+                    <input asp-for="Tipo" class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-yellow-500" placeholder="ej: Luz Solar Directa" />
+                    <span asp-validation-for="Tipo" class="text-red-600 text-sm"></span>
+                </div>
+
+                <div class="mb-4">
+                    <label asp-for="HorasMin" class="block text-sm font-medium text-gray-700 mb-1">
+                        <i class="ph ph-clock text-gray-500"></i>
+                        Horas Mínimas (h/día)
+                    </label>
+                    <input asp-for="HorasMin" type="number" class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-yellow-500" placeholder="ej: 4" />
+                    <span asp-validation-for="HorasMin" class="text-red-600 text-sm"></span>
+                </div>
+
+                <div class="mb-4">
+                    <label asp-for="HorasMax" class="block text-sm font-medium text-gray-700 mb-1">
+                        <i class="ph ph-clock text-gray-500"></i>
+                        Horas Máximas (h/día)
+                    </label>
+                    <input asp-for="HorasMax" type="number" class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-yellow-500" placeholder="ej: 8" />
+                    <span asp-validation-for="HorasMax" class="text-red-600 text-sm"></span>
+                </div>
+
+                <div class="md:col-span-2 mb-4">
+                    <label asp-for="UbicacionRecomendada" class="block text-sm font-medium text-gray-700 mb-1">
+                        <i class="ph ph-map-pin text-gray-500"></i>
+                        Ubicación Recomendada
+                    </label>
+                    <input asp-for="UbicacionRecomendada" class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-yellow-500" placeholder="ej: Cerca de ventana orientada al sur" />
+                    <span asp-validation-for="UbicacionRecomendada" class="text-red-600 text-sm"></span>
+                </div>
+
+                <div class="md:col-span-2 mb-4">
+                    <label asp-for="Descripcion" class="block text-sm font-medium text-gray-700 mb-1">Descripción</label>
+                    <textarea asp-for="Descripcion" rows="4" class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-yellow-500" placeholder="Describe este tipo de luz y sus características..."></textarea>
+                    <span asp-validation-for="Descripcion" class="text-red-600 text-sm"></span>
+                </div>
+            </div>
+
+            <div class="mt-8 flex justify-end gap-4">
+                <a asp-action="Luces" class="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">
+                    Cancelar
+                </a>
+                <button type="submit" class="bg-[#1E6241] hover:bg-[#195136] text-white px-6 py-2 rounded-lg inline-flex items-center gap-2">
+                    <i class="ph ph-plus-circle"></i>
+                    Crear Luz
+                </button>
+            </div>
+        </form>
+    </div>
+</section>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

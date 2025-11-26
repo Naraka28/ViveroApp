@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using ViveroApp.Attributes;
 using ViveroApp.Dto;
+using ViveroApp.Models;
 using ViveroApp.Servicios;
 
 namespace ViveroApp.Controllers
@@ -24,18 +25,49 @@ namespace ViveroApp.Controllers
             this.servicioArchivos = servicioArchivos;
         }
 
+        public async Task<IActionResult> Plantas([FromQuery] FiltroPlantasDto? filtro)
+        {
+            if (filtro == null )
+            {
+                var plantas = await repositorioAdmin.ObtenerTodasPlantas();
+                return View("Plantas/Index", plantas);
+            }
+
+            var resultado = await repositorioAdmin.ObtenerTodasPlantasPaginadas(filtro);
+            return View("Plantas/Index", resultado);
+        }
+
+        public async Task<IActionResult> Categorias([FromQuery] FiltroCategoriasDto? filtro)
+        {
+            if (filtro == null)
+            {
+                var categorias = await repositorioAdmin.ObtenerCategorias();
+                return View("Categorias/Index", categorias);
+            }
+
+            var resultado = await repositorioAdmin.ObtenerCategoriasPaginadas(filtro);
+            return View("Categorias/Index", resultado);
+        }
+
+        public async Task<IActionResult> Usuarios([FromQuery] FiltroUsuariosDto? filtro)
+        {
+            if (filtro == null)
+            {
+                var usuarios = await repositorioAdmin.ObtenerUsuarios();
+                return View("Usuarios/Index", usuarios);
+            }
+
+            var resultado = await repositorioAdmin.ObtenerUsuariosPaginados(filtro);
+            return View("Usuarios/Index", resultado);
+        }
+
+
+
+
         public async Task<IActionResult> Index()
         {
             var stats = await repositorioAdmin.ObtenerEstadisticas();
             return View(stats);
-        }
-
-        #region Plantas
-
-        public async Task<IActionResult> Plantas()
-        {
-            var plantas = await repositorioAdmin.ObtenerTodasPlantas();
-            return View("Plantas/Index", plantas);
         }
 
         public async Task<IActionResult> CrearPlanta()
@@ -140,16 +172,6 @@ namespace ViveroApp.Controllers
             return RedirectToAction(nameof(Plantas));
         }
 
-        #endregion
-
-        #region Categorías
-
-        public async Task<IActionResult> Categorias()
-        {
-            var categorias = await repositorioAdmin.ObtenerCategorias();
-            return View("Categorias/Index", categorias);
-        }
-
         public IActionResult CrearCategoria()
         {
             return View("Categorias/Crear");
@@ -247,16 +269,6 @@ namespace ViveroApp.Controllers
             return RedirectToAction(nameof(Categorias));
         }
 
-        #endregion
-
-        #region Usuarios
-
-        public async Task<IActionResult> Usuarios()
-        {
-            var usuarios = await repositorioAdmin.ObtenerUsuarios();
-            return View("Usuarios/Index", usuarios);
-        }
-
         public IActionResult CrearUsuario()
         {
             return View("Usuarios/Crear");
@@ -312,14 +324,57 @@ namespace ViveroApp.Controllers
             return RedirectToAction(nameof(Usuarios));
         }
 
-        #endregion
-
-        #region Otros
-
         public async Task<IActionResult> Riegos()
         {
             var riegos = await repositorioAdmin.ObtenerRiegos();
             return View(riegos);
+        }
+
+        public IActionResult CrearRiego()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CrearRiego(Riego riego)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(riego);
+            }
+
+            await repositorioAdmin.CrearRiego(riego);
+            TempData["Mensaje"] = "Tipo de riego creado exitosamente";
+            return RedirectToAction(nameof(Riegos));
+        }
+
+        public async Task<IActionResult> EditarRiego(int id)
+        {
+            var riego = await repositorioAdmin.ObtenerRiegoPorId(id);
+            if (riego == null) return NotFound();
+
+            return View(riego);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditarRiego(int id, Riego riego)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(riego);
+            }
+
+            await repositorioAdmin.ActualizarRiego(id, riego);
+            TempData["Mensaje"] = "Tipo de riego actualizado exitosamente";
+            return RedirectToAction(nameof(Riegos));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EliminarRiego(int id)
+        {
+            await repositorioAdmin.EliminarRiego(id);
+            TempData["Mensaje"] = "Tipo de riego eliminado exitosamente";
+            return RedirectToAction(nameof(Riegos));
         }
 
         public async Task<IActionResult> Luces()
@@ -328,14 +383,105 @@ namespace ViveroApp.Controllers
             return View(luces);
         }
 
+        public IActionResult CrearLuz()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CrearLuz(Luz luz)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(luz);
+            }
+
+            await repositorioAdmin.CrearLuz(luz);
+            TempData["Mensaje"] = "Tipo de luz creado exitosamente";
+            return RedirectToAction(nameof(Luces));
+        }
+
+        public async Task<IActionResult> EditarLuz(int id)
+        {
+            var luz = await repositorioAdmin.ObtenerLuzPorId(id);
+            if (luz == null) return NotFound();
+
+            return View(luz);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditarLuz(int id, Luz luz)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(luz);
+            }
+
+            await repositorioAdmin.ActualizarLuz(id, luz);
+            TempData["Mensaje"] = "Tipo de luz actualizado exitosamente";
+            return RedirectToAction(nameof(Luces));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EliminarLuz(int id)
+        {
+            await repositorioAdmin.EliminarLuz(id);
+            TempData["Mensaje"] = "Tipo de luz eliminado exitosamente";
+            return RedirectToAction(nameof(Luces));
+        }
+
         public async Task<IActionResult> Sustratos()
         {
             var sustratos = await repositorioAdmin.ObtenerSustratos();
             return View(sustratos);
         }
 
-        #endregion
+        public IActionResult CrearSustrato()
+        {
+            return View();
+        }
 
+        [HttpPost]
+        public async Task<IActionResult> CrearSustrato(Sustrato sustrato)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(sustrato);
+            }
+
+            await repositorioAdmin.CrearSustrato(sustrato);
+            TempData["Mensaje"] = "Tipo de sustrato creado exitosamente";
+            return RedirectToAction(nameof(Sustratos));
+        }
+
+        public async Task<IActionResult> EditarSustrato(int id)
+        {
+            var sustrato = await repositorioAdmin.ObtenerSustratoPorId(id);
+            if (sustrato == null) return NotFound();
+
+            return View(sustrato);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditarSustrato(int id, Sustrato sustrato)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(sustrato);
+            }
+
+            await repositorioAdmin.ActualizarSustrato(id, sustrato);
+            TempData["Mensaje"] = "Tipo de sustrato actualizado exitosamente";
+            return RedirectToAction(nameof(Sustratos));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EliminarSustrato(int id)
+        {
+            await repositorioAdmin.EliminarSustrato(id);
+            TempData["Mensaje"] = "Tipo de sustrato eliminado exitosamente";
+            return RedirectToAction(nameof(Sustratos));
+        }
         private async Task CargarDatosPlanta()
         {
             ViewBag.Riegos = await repositorioAdmin.ObtenerRiegos();
@@ -343,5 +489,7 @@ namespace ViveroApp.Controllers
             ViewBag.Sustratos = await repositorioAdmin.ObtenerSustratos();
             ViewBag.Categorias = await repositorioAdmin.ObtenerCategorias();
         }
+
+
     }
 }

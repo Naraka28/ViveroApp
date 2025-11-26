@@ -10,7 +10,6 @@ namespace ViveroApp.Dto
         public string? ImagenUrl { get; set; }
         public string Dificultad { get; set; }
         public bool Toxica { get; set; }
-
         public string? RiegoNombre { get; set; }
         public string? LuzTipo { get; set; }
         public string? SustratoTipo { get; set; }
@@ -21,13 +20,13 @@ namespace ViveroApp.Dto
         public string Etiqueta { get; set; }
         public int Valor { get; set; }
     }
+
     public class EstadisticasDto
     {
         public int TotalPlantas { get; set; }
         public int TotalUsuarios { get; set; }
         public int TotalCategorias { get; set; }
         public int PlantasEnJardines { get; set; }
-
         public List<DatoGrafico> PlantasPorDificultad { get; set; }
         public List<DatoGrafico> UsuariosUltimos6Meses { get; set; }
         public List<DatoGrafico> TopCategorias { get; set; }
@@ -40,26 +39,20 @@ namespace ViveroApp.Dto
         public string? NombreCientifico { get; set; }
         public string? Descripcion { get; set; }
         public string ImagenUrl { get; set; }
-
         [Display(Name = "Imagen de la planta")]
         public IFormFile ImagenFile { get; set; }
-
         [Required]
         public int RiegoId { get; set; }
-
         [Required]
         public int LuzId { get; set; }
-
         [Required]
         public int SustratoId { get; set; }
-
         public string? CuidadosEspeciales { get; set; }
         public int? AlturaMaxCm { get; set; }
         public string Dificultad { get; set; } = "media";
         public bool Toxica { get; set; }
         public string? Notas { get; set; }
         public List<int> CategoriasIds { get; set; } = new List<int>();
-
     }
 
     public class EditarPlantaDto : CrearPlantaDto
@@ -68,7 +61,6 @@ namespace ViveroApp.Dto
         [Display(Name = "Cambiar imagen de la planta")]
         public IFormFile ImagenFile { get; set; }
         public List<int> CategoriasIds { get; set; } = new List<int>();
-
     }
 
     public class UsuarioAdminDto
@@ -80,41 +72,73 @@ namespace ViveroApp.Dto
         public bool Activo { get; set; }
         public DateTime FechaRegistro { get; set; }
     }
+
     public class CrearUsuarioDto
     {
         [Required(ErrorMessage = "El nombre es obligatorio")]
         public string Nombre { get; set; }
-
         [Required(ErrorMessage = "El email es obligatorio")]
         [EmailAddress(ErrorMessage = "El email no es válido")]
         public string Email { get; set; }
-
         [Required(ErrorMessage = "La contraseña es obligatoria")]
         [MinLength(6, ErrorMessage = "La contraseña debe tener al menos 6 caracteres")]
         public string Password { get; set; }
-
         [Compare("Password", ErrorMessage = "Las contraseñas no coinciden")]
         public string ConfirmarPassword { get; set; }
-
         [Required(ErrorMessage = "El rol es obligatorio")]
         public string Rol { get; set; } = "usuario";
-
         public bool Activo { get; set; } = true;
     }
+
     public class EditarUsuarioDto
     {
         public int Id { get; set; }
-
         [Required(ErrorMessage = "El nombre es obligatorio")]
         public string Nombre { get; set; }
-
         [Required(ErrorMessage = "El email es obligatorio")]
         [EmailAddress(ErrorMessage = "El email no es válido")]
         public string Email { get; set; }
-
         [Required(ErrorMessage = "El rol es obligatorio")]
         public string Rol { get; set; }
-
         public bool Activo { get; set; }
+    }
+
+
+    public class PaginacionDto<T>
+    {
+        public IEnumerable<T> Items { get; set; }
+        public int PaginaActual { get; set; }
+        public int TotalPaginas { get; set; }
+        public int TotalRegistros { get; set; }
+        public int RegistrosPorPagina { get; set; } = 10;
+
+        public bool TienePaginaAnterior => PaginaActual > 1;
+        public bool TienePaginaSiguiente => PaginaActual < TotalPaginas;
+    }
+
+    public class FiltroPlantasDto
+    {
+        public string? Busqueda { get; set; }
+        public string? Dificultad { get; set; }
+        public bool? Toxica { get; set; }
+        public int Pagina { get; set; } = 1;
+        public int RegistrosPorPagina { get; set; } = 10;
+    }
+
+    public class FiltroCategoriasDto
+    {
+        public string? Busqueda { get; set; }
+        public int Pagina { get; set; } = 1;
+        public int RegistrosPorPagina { get; set; } = 10;
+    }
+
+    public class FiltroUsuariosDto
+    {
+        public string? Busqueda { get; set; }
+        public string? Rol { get; set; }
+        public bool? Activo { get; set; }
+        public DateTime? FechaRegistro { get; set; }
+        public int Pagina { get; set; } = 1;
+        public int RegistrosPorPagina { get; set; } = 10;
     }
 }

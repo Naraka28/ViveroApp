@@ -1,0 +1,89 @@
+﻿@model IEnumerable<ViveroApp.Models.Sustrato>
+@{
+    ViewData["Title"] = "Gestionar Sustratos";
+}
+
+<section class="my-[3rem]">
+    <div class="flex justify-between items-center mb-6">
+        <div>
+            <h2 class="text-4xl font-bold text-gray-800">Gestionar Sustratos</h2>
+            <p class="text-xl text-gray-600 mt-2">@Model.Count() tipos de sustrato registrados</p>
+        </div>
+        <a asp-action="CrearSustrato" class="bg-[#1E6241] hover:bg-[#195136] text-white px-6 py-3 rounded-xl inline-flex items-center gap-2">
+            <i class="ph ph-plus-circle"></i>
+            <span>Nuevo Sustrato</span>
+        </a>
+    </div>
+
+    @if (TempData["Mensaje"] != null)
+    {
+        <div class="bg-green-50 border-l-4 border-green-500 text-green-800 px-6 py-4 rounded-r-xl mb-6">
+            @TempData["Mensaje"]
+        </div>
+    }
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        @foreach (var sustrato in Model)
+        {
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
+                <div class="flex items-start justify-between mb-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 bg-amber-100 rounded-lg flex items-center justify-center">
+                            <i class="ph ph-flower text-amber-700 text-2xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold text-gray-900">@sustrato.Tipo</h3>
+                        </div>
+                    </div>
+                </div>
+
+                <p class="text-gray-600 text-sm mb-4">@sustrato.Descripcion</p>
+
+                <div class="space-y-2 mb-4">
+                    @if (!string.IsNullOrEmpty(sustrato.PhRango))
+                    {
+                        <div class="flex items-center gap-2 text-sm">
+                            <i class="ph ph-test-tube text-purple-500"></i>
+                            <span class="text-gray-600">pH: @sustrato.PhRango</span>
+                        </div>
+                    }
+                    @if (!string.IsNullOrEmpty(sustrato.Drenaje))
+                    {
+                        <div class="flex items-center gap-2 text-sm">
+                            <i class="ph ph-drop-half text-blue-500"></i>
+                            <span class="text-gray-600">Drenaje: @sustrato.Drenaje</span>
+                        </div>
+                    }
+                    @if (!string.IsNullOrEmpty(sustrato.Composicion))
+                    {
+                        <div class="flex items-start gap-2 text-sm">
+                            <i class="ph ph-package text-green-500 mt-0.5"></i>
+                            <span class="text-gray-600">@sustrato.Composicion</span>
+                        </div>
+                    }
+                </div>
+
+                @if (!string.IsNullOrEmpty(sustrato.Recomendaciones))
+                {
+                    <div class="bg-amber-50 border border-amber-200 rounded-lg p-3 mb-4">
+                        <p class="text-xs text-amber-800">
+                            <i class="ph ph-info mr-1"></i>
+                            @sustrato.Recomendaciones
+                        </p>
+                    </div>
+                }
+
+                <div class="flex justify-end gap-2 pt-4 border-t border-gray-200">
+                    <a asp-action="EditarSustrato" asp-route-id="@sustrato.Id" class="text-blue-600 hover:text-blue-800 px-3 py-2">
+                        <i class="ph ph-pencil text-xl"></i>
+                    </a>
+                    <form asp-action="EliminarSustrato" asp-route-id="@sustrato.Id" method="post" class="inline" onsubmit="return confirm('¿Eliminar este tipo de sustrato?')">
+                        <button type="submit" class="text-red-600 hover:text-red-800 px-3 py-2">
+                            <i class="ph ph-trash text-xl"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        }
+    </div>
+</section>

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<ViveroApp.Dto.CategoriaDto>
+﻿@model ViveroApp.Dto.PaginacionDto<ViveroApp.Dto.CategoriaDto>
 @{
     ViewData["Title"] = "Gestionar Categorías";
 }
@@ -7,7 +7,7 @@
     <div class="flex justify-between items-center mb-6">
         <div>
             <h2 class="text-4xl font-bold text-gray-800">Gestionar Categorías</h2>
-            <p class="text-xl text-gray-600 mt-2">@Model.Count() categorías registradas</p>
+            <p class="text-xl text-gray-600 mt-2">@Model.TotalRegistros categorías registradas</p>
         </div>
         <a asp-action="CrearCategoria" class="bg-[#1E6241] hover:bg-[#195136] text-white px-6 py-3 rounded-xl inline-flex items-center gap-2 transition-colors">
             <i class="ph ph-plus-circle"></i>
@@ -31,6 +31,27 @@
         </div>
     }
 
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-6">
+        <form method="get" asp-action="Categorias" class="flex gap-4">
+            <div class="flex-1">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Buscar por nombre</label>
+                <input type="text" name="Busqueda" value="@Context.Request.Query["Busqueda"]"
+                       placeholder="Buscar categoría..."
+                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+            </div>
+
+            <div class="flex items-end gap-2">
+                <button type="submit" class="bg-[#1E6241] hover:bg-[#195136] text-white px-6 py-2 rounded-lg inline-flex items-center justify-center gap-2">
+                    <i class="ph ph-magnifying-glass"></i>
+                    Buscar
+                </button>
+                <a asp-action="Categorias" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded-lg inline-flex items-center justify-center">
+                    <i class="ph ph-x"></i>
+                </a>
+            </div>
+        </form>
+    </div>
+
     <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
         <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
@@ -42,7 +63,7 @@
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-200">
-                @foreach (var cat in Model)
+                @foreach (var cat in Model.Items)
                 {
                     <tr class="hover:bg-gray-50 transition-colors">
                         <td class="px-6 py-4">
@@ -95,15 +116,51 @@
             </tbody>
         </table>
 
-        @if (!Model.Any())
+        @if (!Model.Items.Any())
         {
             <div class="text-center py-12">
                 <i class="ph ph-folder-open text-6xl text-gray-300 mb-4"></i>
-                <p class="text-gray-500 text-lg">No hay categorías registradas</p>
-                <a asp-action="CrearCategoria" class="mt-4 inline-flex items-center gap-2 text-green-600 hover:text-green-700 font-medium">
-                    <i class="ph ph-plus-circle"></i>
-                    Crear la primera categoría
-                </a>
+                <p class="text-gray-500 text-lg">No se encontraron categorías</p>
+            </div>
+        }
+
+        @if (Model.TotalPaginas > 1)
+        {
+            <div class="px-6 py-4 border-t border-gray-200 flex items-center justify-between">
+                <div class="text-sm text-gray-700">
+                    Mostrando @((Model.PaginaActual - 1) * Model.RegistrosPorPagina + 1) a @(Math.Min(Model.PaginaActual * Model.RegistrosPorPagina, Model.TotalRegistros)) de @Model.TotalRegistros resultados
+                </div>
+                <div class="flex gap-2">
+                    @if (Model.TienePaginaAnterior)
+                    {
+                        <a asp-action="Categorias"
+                           asp-route-pagina="@(Model.PaginaActual - 1)"
+                           asp-route-busqueda="@Context.Request.Query["Busqueda"]"
+                           class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
+                            Anterior
+                        </a>
+                    }
+
+                    @for (int i = Math.Max(1, Model.PaginaActual - 2); i <= Math.Min(Model.TotalPaginas, Model.PaginaActual + 2); i++)
+                    {
+                        <a asp-action="Categorias"
+                           asp-route-pagina="@i"
+                           asp-route-busqueda="@Context.Request.Query["Busqueda"]"
+                           class="px-4 py-2 border rounded-lg @(i == Model.PaginaActual ? "bg-[#1E6241] text-white border-[#1E6241]" : "border-gray-300 hover:bg-gray-50")">
+                            @i
+                        </a>
+                    }
+
+                    @if (Model.TienePaginaSiguiente)
+                    {
+                        <a asp-action="Categorias"
+                           asp-route-pagina="@(Model.PaginaActual + 1)"
+                           asp-route-busqueda="@Context.Request.Query["Busqueda"]"
+                           class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
+                            Siguiente
+                        </a>
+                    }
+                </div>
             </div>
         }
     </div>
