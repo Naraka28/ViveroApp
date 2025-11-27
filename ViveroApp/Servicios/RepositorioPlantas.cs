@@ -87,6 +87,8 @@ namespace ViveroApp.Servicios
                 Termino = $"%{termino}%",
                 TerminoExacto = $"{termino}%"
             });
+        }
+            
         public async Task<PlantasPorCategoriaDto> ObtenerPlantasPorCategoria(string categoria)
         {
             using var connection = new SqlConnection(connectionString);
