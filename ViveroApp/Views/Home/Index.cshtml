@@ -194,63 +194,6 @@ else
                                 <p class="text-sm italic text-gray-500 mb-3">@planta.PlantaNombreCientifico</p>
                             }
 
-<!-- Favoritas -->
-<section class="my-[4rem]">
-    <h2 class="text-4xl font-bold text-gray-800 mb-4">
-        Las Favoritas
-    </h2>
-    <p class="text-xl text-gray-600 mb-8 max-w-2xl">
-        Plantas populares perfectas para empezar tu jardín
-    </p>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-
-        <div class="plant-card relative bg-cover bg-center bg-no-repeat overflow-hidden cursor-pointer group transition-all duration-300" style="background-image: url('/images/aloe.jpg');">
-            <div class="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-500 group-hover:scale-110" style="background-image: url('/images/aloe.jpg');"></div>
-            <div class="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors duration-300"></div>
-            <div class="absolute bottom-0 left-0 right-0 p-6 text-white z-10 transform transition-transform duration-300 group-hover:-translate-y-2">
-                <h3 class="text-2xl leading-tight">Sábila</h3>
-                <p class="text-lg font-light opacity-90">Aloe Vera</p>
-            </div>
-        </div>
-
-        <div class="plant-card relative bg-cover bg-center bg-no-repeat overflow-hidden cursor-pointer group transition-all duration-300" style="background-image: url('/images/cempasuchil.jpg');">
-            <div class="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-500 group-hover:scale-110" style="background-image: url('/images/cempasuchil.jpg');"></div>
-            <div class="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors duration-300"></div>
-            <div class="absolute bottom-0 left-0 right-0 p-6 text-white z-10 transform transition-transform duration-300 group-hover:-translate-y-2">
-                <h3 class="text-2xl leading-tight">Cempasúchil</h3>
-                <p class="text-lg font-light opacity-90">Tageter Erecta</p>
-            </div>
-                            @if (!string.IsNullOrEmpty(planta.Ubicacion))
-                            {
-                                <div class="flex items-center gap-2 text-sm text-gray-600 mb-4">
-                                    <i class="ph ph-map-pin text-lg text-red-500"></i>
-                                    <span>@planta.Ubicacion</span>
-                                </div>
-                            }
-
-                            @if (planta.UltimoRiego.HasValue)
-                            {
-                                <div class="flex items-center gap-2 text-sm mb-4">
-                                    <i class="ph ph-drop text-lg @(planta.NecesitaRiego ? "text-red-500" : "text-green-500")"></i>
-                                    <span class="text-gray-600">Último riego: @planta.UltimoRiego.Value.ToString("dd/MM/yyyy")</span>
-                                </div>
-                            }
-
-                            <a asp-controller="Plantas"
-                               asp-action="DetallePlanta"
-                               asp-route-id="@planta.PlantaId"
-                               class="block w-full text-center px-4 py-2 border border-[#1E6241] text-[#1E6241] hover:bg-[#E9F0EC] rounded-lg text-sm font-medium transition-colors">
-                                Ver detalles
-                            </a>
-                        </div>
-                    </div>
-                }
-            </div>
-        </section>
-    }
-}
-
-
 <!-- Populares -->
 <section class="my-[4rem]">
     <div class="flex justify-between items-center mb-6">
@@ -307,7 +250,10 @@ else
             <div class="inline-flex items-center justify-center w-14 h-14 bg-[#DCFCE7] rounded-full text-[#1AA54D] mb-6">
                 <i class="ph ph-baby text-2xl"></i>
             </div>
-            <h3 class="text-2xl mb-4">Principiantes</h3>
+
+            <h3 class="text-2xl mb-4">
+                Principiantes
+            </h3>
             <p class="text-l text-gray-800 mb-4">
                 Plantas resistentes y de bajo mantenimiento perfectas para empezar
             </p>
@@ -321,7 +267,9 @@ else
             <div class="inline-flex items-center justify-center w-14 h-14 bg-[#FEF3C7] rounded-full text-[#D97706] mb-6">
                 <i class="ph ph-sun-dim text-2xl"></i>
             </div>
-            <h3 class="text-2xl mb-4">Poca Luz</h3>
+            <h3 class="text-2xl mb-4">
+                Poca Luz
+            </h3>
             <p class="text-l text-gray-800 mb-4">
                 Ideales para espacios interiores con luz indirecta
             </p>
@@ -335,7 +283,9 @@ else
             <div class="inline-flex items-center justify-center w-14 h-14 bg-[#DBEAFE] rounded-full text-[#2866EB] mb-6">
                 <i class="ph ph-drop text-2xl"></i>
             </div>
-            <h3 class="text-2xl mb-4">Bajo Riego</h3>
+            <h3 class="text-2xl mb-4">
+                Bajo Riego
+            </h3>
             <p class="text-l text-gray-800 mb-4">
                 Perfectas si viajas seguido o prefieres regar poco
             </p>
@@ -346,7 +296,6 @@ else
         </a>
     </div>
 </section>
-
 <!-- Modal para resultados de identificación por imagen -->
 <div id="modalIdentificacion" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
