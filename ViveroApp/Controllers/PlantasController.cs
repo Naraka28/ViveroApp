@@ -33,7 +33,6 @@ namespace ViveroApp.Controllers
         public async Task<IActionResult> Index()
         {
             var plantas = await repositorioPlantas.ObtenerTodasLasPlantas();
-
             return View(plantas);
         }
 
@@ -71,6 +70,7 @@ namespace ViveroApp.Controllers
             var resultados = await repositorioPlantas.BuscarPlantas(q);
             return Json(new { success = true, data = resultados });
         }
+
         [HttpPost]
         public async Task<IActionResult> IdentificarPorImagen([FromBody] IdentificarPlantaRequest request)
         {
@@ -111,7 +111,6 @@ namespace ViveroApp.Controllers
 
                 // SIEMPRE devolver éxito si hay sugerencias, independientemente de IsPlantBinary
                 return Json(new { success = true, data = resultado });
-
             }
             catch (Exception ex)
             {
@@ -124,11 +123,6 @@ namespace ViveroApp.Controllers
             }
         }
 
-        public class IdentificarPlantaRequest
-        {
-            public string ImagenBase64 { get; set; } = string.Empty;
-            public double? Latitude { get; set; }
-            public double? Longitude { get; set; }
         public async Task<IActionResult> Categoria(string nombre)
         {
             var resultado = await repositorioPlantas.ObtenerPlantasPorCategoria(nombre);
@@ -166,5 +160,13 @@ namespace ViveroApp.Controllers
 
             return View("Recomendacion", plantas);
         }
+    }
+
+    // Clase DTO fuera del controlador
+    public class IdentificarPlantaRequest
+    {
+        public string ImagenBase64 { get; set; } = string.Empty;
+        public double? Latitude { get; set; }
+        public double? Longitude { get; set; }
     }
 }
